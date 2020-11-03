@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
     #source, foreign key to pk in User
     #optional so I can add standard regions
     #source = models.ForeignKey(User,)
+    
     #name, representing the name of the pokemon region
 
     #version, representing the pokemon game version being played on the region
