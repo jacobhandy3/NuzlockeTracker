@@ -18,17 +18,11 @@ from django.urls import path, include
 from rest_framework import routers
 # from backend.pokemon import views as pokeviews
 # from backend.region import views as regviews
-# from backend.rules import views as ruleviews
+# from rules import views as ruleviews
 # from backend.user import views as userviews
 # from backend.userhistory import views as histviews
 
-router = routers.DefaultRouter()
-# router.register(r'rules',ruleviews.RuleView,'rules')
-# router.register(r'pokemon',pokeviews.PokeView,'pokemon')
-# router.register(r'regions','regviews.RegView,'region')
-# router.register(r'history','histviews.HistView,'history')
-
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #path('home/',include(router.urls))
+    path('', include('rules.urls'))
 ]
