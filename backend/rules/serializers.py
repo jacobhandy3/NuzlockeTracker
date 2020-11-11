@@ -7,4 +7,7 @@ class RuleSerializer(serializers.ModelSerializer):
         #define target model
         model = Rule
         #list fields
-        fields = ('author','title','body','date_added')
+        fields = ('author','title','body','date_added','slug')
+        extra_kwargs = {
+            'url':{'view_name':'rule-detail','lookup_field':'slug'}
+        }

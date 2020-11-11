@@ -5,7 +5,7 @@ from .models import Rule
 class RuleAdmin(admin.ModelAdmin):
     #list_display lists all the fields in the model
     list_display = ('author','title','body','date_added')
-
+    prepopulated_fields = {'slug': ('title',)}
 
 # Register your models here.
 admin.site.register(Rule, RuleAdmin)

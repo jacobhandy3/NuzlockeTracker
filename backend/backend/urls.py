@@ -15,14 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework import routers
-# from backend.pokemon import views as pokeviews
-# from backend.region import views as regviews
-# from rules import views as ruleviews
-# from backend.user import views as userviews
-# from backend.userhistory import views as histviews
+
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('rules.urls'))
+    path(r'admin/', admin.site.urls),
+    path(r'accounts/', include('django.contrib.auth.urls')),
+    path(r'api/rules/', include('rules.urls'))
 ]
