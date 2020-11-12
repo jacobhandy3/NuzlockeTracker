@@ -1,15 +1,16 @@
 from django.http.response import Http404
 from django.db.models import Q
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from .models import *
 from .serializers import *
+from .permissions import *
 
 # Create your views here.
 
 class RuleList(generics.ListAPIView):
     #define permissions
-    permission_classes = [IsAuthenticated]
+    permission_classes = (IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly)
     #define serializer_class with custom serializer
     serializer_class = RuleSerializer
     #redefine get_queryset method
@@ -22,7 +23,7 @@ class RuleList(generics.ListAPIView):
 
 class RuleDetail(generics.RetrieveUpdateDestroyAPIView):
     #define permissions
-    permission_classes = [IsAuthenticated]
+    permission_classes = (IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly)
     #define serializer_class with custom serializer
     serializer_class = RuleSerializer
 
