@@ -2,9 +2,9 @@ from django.http.response import Http404
 from django.db.models import Q
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from .permissions import *
 from .models import *
 from .serializers import *
-from .permissions import *
 
 # Create your views here.
 
@@ -35,3 +35,7 @@ class RuleDetail(generics.RetrieveUpdateDestroyAPIView):
         #return filtered objects WHERE author_id=users's id
         return Rule.objects.filter(author=user)
         
+class RuleCreate(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = RuleSerializer
+    queryset = Rule.objects.all()

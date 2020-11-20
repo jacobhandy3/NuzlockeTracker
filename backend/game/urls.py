@@ -3,11 +3,11 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from .views import *
 
 urlpatterns = [
-    #home page showing the mandatory rules
-    path('', RuleList.as_view(),name='rules'),
+    #home page showing the mandatory games
+    path('', GameList.as_view(),name='games'),
     #show user custom rules + mandatory rules
-    path('<slug:slug>/', RuleDetail.as_view(),name='rule-detail'),
-    path('create/',RuleCreate.as_view(),name='rule-create')
+    path('<slug:slug>/', GameDetail.as_view(),name='game-detail'),
+    path('create/',GameCreate.as_view(),name='game-create')
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
