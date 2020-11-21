@@ -36,6 +36,6 @@ class RuleDetail(generics.RetrieveUpdateDestroyAPIView):
         return Rule.objects.filter(author=user)
         
 class RuleCreate(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsOwnerOrReadOnly]
     serializer_class = RuleSerializer
     queryset = Rule.objects.all()

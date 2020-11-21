@@ -25,7 +25,7 @@ class GameDetail(generics.RetrieveUpdateDestroyAPIView):
         return Game.objects.filter(contributor=user)
     
 class GameCreate(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsOwnerOrReadOnly]
     serializer_class = GameSerializer
     queryset = Game.objects.all()
     
