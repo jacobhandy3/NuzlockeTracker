@@ -3,6 +3,8 @@ from .models import Rule
 
 #serializer for model 'Rule' for JSON conversion for the frontend
 class RuleSerializer(serializers.ModelSerializer):
+    #dont allow users to be able to switch author to any other users
+    author = serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
         #define target model
         model = Rule

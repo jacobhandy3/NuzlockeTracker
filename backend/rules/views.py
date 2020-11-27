@@ -8,7 +8,9 @@ from .serializers import *
 
 # Create your views here.
 
-class RuleList(generics.ListAPIView):
+#Lists all mandatory rules and user-defined rules
+#Allows creation of rules as well
+class RuleList(generics.ListCreateAPIView):
     #define permissions
     permission_classes = (IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly)
     #define serializer_class with custom serializer
@@ -20,7 +22,7 @@ class RuleList(generics.ListAPIView):
         #return filtered objects WHERE author_id=1 OR author_id=user's id
         return Rule.objects.filter(Q(author=1) | Q(author=user))
 
-
+#Allows GET, PUT, and DELETE of specific rules for authenticated users
 class RuleDetail(generics.RetrieveUpdateDestroyAPIView):
     #define permissions
     permission_classes = (IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly)
@@ -34,8 +36,3 @@ class RuleDetail(generics.RetrieveUpdateDestroyAPIView):
         user = self.request.user
         #return filtered objects WHERE author_id=users's id
         return Rule.objects.filter(author=user)
-        
-class RuleCreate(generics.CreateAPIView):
-    permission_classes = [IsOwnerOrReadOnly]
-    serializer_class = RuleSerializer
-    queryset = Rule.objects.all()

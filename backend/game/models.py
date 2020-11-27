@@ -12,8 +12,7 @@ class Game(models.Model):
     name = models.CharField(max_length=50)
     #region, representing the pokemon region of the game
     region = models.CharField(max_length=25)
-    #locations, lists the areas with catchable pokemon w/i the region
-    #json format mapping a number to the location to maintain order of encounter
+    #locations, json list for the areas with catchable pokemon w/i the region
     locations = models.JSONField()
     #slug for use in url instead of pk
     slug = models.SlugField(null=False,unique=True,max_length=75)
