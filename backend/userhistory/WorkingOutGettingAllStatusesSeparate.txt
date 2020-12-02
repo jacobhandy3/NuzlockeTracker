@@ -1,0 +1,33 @@
+ID | trainer  | origin | name	 | nickname |		captured	    		|			received	    	|		missed		 		    |			stored			    |			deceased	   		|
+=============================================================================================================================================================================================================
+0  |    1     |   3    | pikachu |   piki   | 				    			| 2020-11-26 11:11:51.672986-06 | 				    			| 				    			| 2020-11-26 12:27:51.672986-06 |
+1  |    1     |   3    | torchic |   spicy  | 2020-11-26 11:31:51.672986-06 | 				    			| 				    			| 				    			| 				    			|
+2  |    1     |   3    | doduo	 |   	    | 				    			| 				    			| 2020-11-26 12:00:51.672986-06 | 				    			| 				    			|
+3  |    1     |   3    | lotad	 |   loco   | 2020-11-26 12:41:51.672986-06 | 				    			| 				    			| 2020-11-26 12:45:51.672986-06 | 				    			|
+4  |    1     |   3    | seedot  |   ninja  | 2020-11-26 12:50:51.672986-06 | 				    			| 				    			| 				    			| 				    			|
+5  |    1     |   3    | wingull |   gulp   | 2020-11-26 01:15:51.672986-06 | 				    			| 				    			| 				    			| 				    			|
+
+name	 | nickname | status   |				date_time		   	 	|
+==========================================================================
+pikachu |   piki    | received |	2020-11-26 11:11:51.672986-06	    |
+torchic |   spicy   | captured |	2020-11-26 11:31:51.672986-06	    |
+doduo	|   	    |  missed  |	2020-11-26 12:00:51.672986-06	    |
+pikachu |   piki    | deceased |	2020-11-26 12:27:51.672986-06	    |
+lotad	|   loco    | captured |	2020-11-26 12:41:51.672986-06	    |
+lotad	|   loco    |  stored  |	2020-11-26 12:45:51.672986-06	    |
+seedot  |   ninja   | captured |	2020-11-26 12:50:51.672986-06 	    |
+wingull |   gulp    | captured |	2020-11-26 01:15:51.672986-06 	    |
+
+
+SELECT team.name, team.nickname, l.status, l.date_time
+FROM team_team team
+CROSS JOIN LATERAL (VALUES (captured, 'captured'),(received, 'received'),(missed,'missed'),(stored,'stored'),(deceased,'deceased')) AS l(date_time, status)
+ORDER BY l.date_time
+
+template for this:
+==================
+select table_variable.id, listOFvalues_variable.nameOFgrouped_columns, listOFvalues_variable.nameOFgrouped_values
+from table_name table_variable
+cross join lateral (values (table_variable.columnTOmerge1, 'nameOFcolumn1'),
+					(table_variable.columnTOmerge2, 'nameOFcolumn2')) as listOFvalues_variable(nameOFgrouped_values, nameOFgrouped_columns)
+order by table_variable.id, listOFvalues_variable.nameOFgrouped_columns

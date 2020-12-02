@@ -22,4 +22,6 @@ urlpatterns = [
     path(r'accounts/', include('django.contrib.auth.urls')),
     path(r'api/rules/', include('rules.urls')),
     path(r'api/game/',include('game.urls')),
+    path(r'api/team/',include('team.urls')),
+    path(r'api/history/',include('userhistory.urls')),
 ]

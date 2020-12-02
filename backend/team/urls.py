@@ -1,10 +1,10 @@
-# from django.urls import path
-# from rest_framework.urlpatterns import format_suffix_patterns
-# from .views import *
+from django.urls import path
+from rest_framework.urlpatterns import format_suffix_patterns
+from .views import *
 
-# urlpatterns = [
-    # path('', TeamList.as_view(),name='team'),
-    # path('create/',TeamCreate.as_view(),name='team-create')
-# ]
+urlpatterns = [
+    path('<int:origin>/', TeamList.as_view(),name='team-list'),
+    path('<int:pk>/', TeamDetail.as_view(),name='team-detail'),
+]
 
-# urlpatterns = format_suffix_patterns(urlpatterns)
+urlpatterns = format_suffix_patterns(urlpatterns)
