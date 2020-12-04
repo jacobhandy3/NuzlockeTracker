@@ -4,7 +4,7 @@ from .views import *
 
 urlpatterns = [
     path('', HistoryList.as_view(),name='history-list'),
-    path('create/<int:game>',HistoryCreate.as_view(),name='history-create'),
+    path('create/<int:game>/',HistoryCreate.as_view(),name='history-create'),
     path('<slug:slug>/', HistoryDetail.as_view(), name='history-detail'),
 ]
 

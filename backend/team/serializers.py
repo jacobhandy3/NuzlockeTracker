@@ -7,4 +7,4 @@ class TeamSerializer(serializers.ModelSerializer):
         #define target model
         model = Team
         #list fields
-        fields = ('trainer','origin','name','nickname','captured','received','missed','stored','deceased')
+        fields = ('trainer','origin','name','nickname','location','captured','received','missed','stored','deceased')

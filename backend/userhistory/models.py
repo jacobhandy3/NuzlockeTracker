@@ -14,15 +14,15 @@ class History(models.Model):
     #game, foreign key to pk in Game
     game = models.ForeignKey(Game,on_delete=models.CASCADE)
     #title representing the name of the run designated by user
-    title = models.TextField()
+    title = models.TextField(blank=True,null=True)
     #start_date marking the date and time the complete run began
-    start_date = models.DateTimeField()
+    start_date = models.DateTimeField(blank=True,null=True)
     #end_date marking the date and time the complete run ended
-    end_date = models.DateTimeField(auto_now_add=True)
+    end_date = models.DateTimeField(auto_now_add=True,blank=True,null=True)
     #body detailing a pre-generated story based on the details in Pokemon table corresponding to the completed run
-    body = models.TextField()
+    body = models.TextField(blank=True,null=True)
     #slug for unique identification of each history
-    slug = models.SlugField(null=False,unique=True)
+    slug = models.SlugField(blank=True,null=True,unique=True)
 
     def __str__(self):
         return self.title

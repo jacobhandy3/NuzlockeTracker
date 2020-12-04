@@ -85,7 +85,7 @@ class HistoryCreate(generics.CreateAPIView):
         #but also all their statuses separated in rows with a corresponding datetime so a full history is accounted for
         teammates = Team.objects.raw(
         '''
-        SELECT team.name, team.nickname, l.status, l.date_time
+        SELECT team.name, team.nickname, team.location, l.status, l.date_time
         FROM team_team team
         CROSS JOIN LATERAL (VALUES (captured, 'captured'),(received, 'received'),(missed,'missed'),(stored,'stored'),(deceased,'deceased')) AS l(date_time, status)
         WHERE team.trainer_id={user_id} AND team.origin_id={gameID}
@@ -93,9 +93,7 @@ class HistoryCreate(generics.CreateAPIView):
         ''')
 
         #beginning of the body
-        message = "Your journey in " + str(Game.objects.get(id=gameID).region) + " began on " + teammates[0].date_time.strftime('%m-%d-%Y') + "."
-        #keeps track of current location where captured, received or missed teammate occurred
-        locationCount = 0
+        message = "Your journey in " + str(Game.objects.get(id=gameID).region) + " began on " + teammates[0].date_time.strftime('%m-%d-%Y %H:%M:%S') + "."
         #for each object in queryset concerning every teammate's status associated with this game run
         for t in teammates:
             #if teammate was missed modify the default message to exclude a nickname
@@ -105,16 +103,15 @@ class HistoryCreate(generics.CreateAPIView):
             elif t.status == 'deceased' or t.status == 'stored':
                 if t.status == 'deceased': status = "lost"
                 else: status = "stored"
-                message += " You " + status + str(t.nickname) + " on " + t.date_time.strftime('%m-%d-%Y') + "."
+                message += " You " + status + str(t.nickname) + " on " + t.date_time.strftime('%m-%d-%Y %H:%M:%S') + "."
                 continue
             #this is the default message for captured and received
             else:
                 message += " You " + str(t.status) + " a " + str(t.name) + ", which you call " + str(t.nickname) + ", "
             #add date in which status occurred and location it occurred
-            message += " on " + str(t.date_time.strftime('%m-%d-%Y')) + " at " + str(game_locations[locationCount]) + "."
-            locationCount+=1
+            message += " on " + str(t.date_time.strftime('%m-%d-%Y %H:%M:%S')) + " at " + game_locations[t.location] + "."
         #return final message with ending statement on when their journey ended
-        return message + " Your journey ended on " + teammates[teammates.count()-1].date_time.strftime('%m-%d-%Y') + "."
+        return message + " Your journey ended on " + teammates[teammates.count()-1].date_time.strftime('%m-%d-%Y %H:%M:%S') + "."
 
     #delete the objects in Team database associated with the created run
     #takes self and game id for result filters

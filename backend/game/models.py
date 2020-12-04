@@ -19,7 +19,7 @@ class Game(models.Model):
 
     def __str__(self):
         return self.name
-    
+
     def get_absolute_url(self):
         return reverse("game-detail", kwargs={"slug": self.slug})
     
