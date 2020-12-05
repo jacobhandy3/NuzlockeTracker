@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "NTenv\\Scripts\\python.exe"
+    "python.pythonPath": "NTenv\\Scripts\\python.exe",
+    "git.ignoreLimitWarning": true
 }
