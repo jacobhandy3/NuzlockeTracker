@@ -12,7 +12,7 @@ class History(models.Model):
     #author, foreign key to pk in User
     author = models.ForeignKey(User,on_delete=models.CASCADE)
     #game, foreign key to pk in Game
-    game = models.ForeignKey(Game,on_delete=models.CASCADE)
+    game = models.ForeignKey(Game,on_delete=models.CASCADE,blank=True,null=True)
     #title representing the name of the run designated by user
     title = models.TextField(blank=True,null=True)
     #start_date marking the date and time the complete run began
