@@ -8,7 +8,7 @@ from .models import *
 from .serializers import *
 
 # Create your views here.
-    
+
 class TeamList(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = TeamSerializer

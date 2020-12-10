@@ -8,7 +8,7 @@ from django.db.models import Q
 from django.utils.text import slugify
 from rest_framework import generics, status
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated
 from datetime import datetime
 from .models import *
 from .serializers import *
@@ -23,7 +23,7 @@ class HistoryList(generics.ListAPIView):
     serializer_class = HistorySerializer
     #redefined method to only include user's history
     def get_queryset(self):
-        user = self.request.user
+        user = self.request.user.id
         return History.objects.filter(author=user)
 
 class HistoryDetail(generics.RetrieveUpdateDestroyAPIView):

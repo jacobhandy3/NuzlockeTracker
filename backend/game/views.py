@@ -16,7 +16,7 @@ class GameList(generics.ListAPIView):
     serializer_class = GameSerializer
     #redefined method to exclude other user-defined games
     def get_queryset(self):
-        user = self.request.user
+        user = self.request.user.id
         return Game.objects.filter(Q(contributor=1) | Q(contributor=user))
 
 #Manage individual games for get, patch, and delete needs
@@ -29,7 +29,7 @@ class GameDetail(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'slug'
     #redefined method to only display user-defined games
     def get_queryset(self):
-        user = self.request.user
+        user = self.request.user.id
         return Game.objects.filter(contributor=user)
     
 #Creates custom games, separated from other views for planned creation web page

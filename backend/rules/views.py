@@ -18,7 +18,7 @@ class RuleList(generics.ListCreateAPIView):
     #redefine get_queryset method
     def get_queryset(self):
         #retrieve the user info
-        user = self.request.user
+        user = self.request.user.id
         #return filtered objects WHERE author_id=1 OR author_id=user's id
         return Rule.objects.filter(Q(author=1) | Q(author=user))
 
