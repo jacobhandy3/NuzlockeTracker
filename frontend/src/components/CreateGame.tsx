@@ -3,33 +3,53 @@ import axios from 'axios';
 import {
     Button,
     Container, Row, Col,
-    Form,
-  } from 'react-bootstrap';
+    Form, FormControl,
+    InputGroup,
+    ListGroup,
+ } from 'react-bootstrap';
 
 function CreateGame(): JSX.Element {
     //states
-    //effects
     return(
         <div>
             <Container fluid>
-                <Row>
-                    <Col>
+                <Row className="row align-items-center">
+                    <Col md={{ span: 1, offset: 0 }}>
                         <Button>Cancel</Button>
                     </Col>
-                    <Col><h2>Add Custom Game</h2></Col>
-                    <Col>
+                    <Col md={{ span: 6, offset: 2 }}><h2>Add Custom Game</h2></Col>
+                    <Col md={{ span: 1, offset: 2 }}>
                         <Button>Done</Button>
                     </Col>
                 </Row>
+                <br></br>
                 <Form>
-                    <Form.Group as={Row} controlId="formPlaintextUsername">
-                        <Form.Label column sm="2">
-                            Username
-                        </Form.Label>
-                        <Col sm="10">
-                            <Form.Control placeholder="Username" />
+                    <Form.Group as={Row} className="row align-items-center">
+                        <Col md={{ span: 6, offset: 3 }}>
+                            <InputGroup className="mb-3">
+                                <InputGroup.Prepend>
+                                <InputGroup.Text id="inputGroup-sizing-default">Version</InputGroup.Text>
+                                </InputGroup.Prepend>
+                                <FormControl/>
+                            </InputGroup>
                         </Col>
                     </Form.Group>
+                    <Form.Group as={Row}>
+                        <Col md={{ span: 6, offset: 3 }}>
+                            <InputGroup className="mb-3">
+                                <InputGroup.Prepend>
+                                <InputGroup.Text id="inputGroup-sizing-default">Region</InputGroup.Text>
+                                </InputGroup.Prepend>
+                                <FormControl/>
+                            </InputGroup>
+                        </Col>
+                    </Form.Group>
+                    <h5>Locations</h5>
+                    <input type="text"></input>
+                    <Button>Add a Location</Button>
+                    <ListGroup variant="flush">
+                        <ListGroup.Item></ListGroup.Item>
+                    </ListGroup>
                 </Form>
             </Container>
         </div>
@@ -39,5 +59,5 @@ function CreateGame(): JSX.Element {
 export default CreateGame;
 
 // TODO:
-//      MAKE FORM APPEAR AS INTENDED
+//      INPUT/BUTTON FUNCTIONALITY
 //      API FUNCTIONALITY

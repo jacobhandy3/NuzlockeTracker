@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import {
     Button, ButtonGroup,
     Container, Row, Col,
-    Card,
+    Table,
     Form,
   } from 'react-bootstrap';
 
@@ -45,26 +45,45 @@ function Game(): JSX.Element {
                 return g.slug === slug ?
                 <Container fluid key={g.slug}>
                     <Row className="row align-items-center">
-                        <Col>{g.region}</Col>
-                        <Col md={{ span: 4, offset: 1 }}><h1>{g.name}</h1></Col>
-                        <Col md={{ span: 2, offset: 3 }}>
+                        <Col md={{ span: 1, offset: 0 }}><h5>{g.region}</h5></Col>
+                        <Col md={{ span: 6, offset: 2 }}><h1>{g.name}</h1></Col>
+                        <Col md={{ span: 2, offset: 1 }}>
                             <ButtonGroup>
-                                <Button>start</Button>
-                                <Button>end</Button>
+                                <Button>Start Run</Button>
+                                <Button>End Run</Button>
                             </ButtonGroup>
                         </Col>
                     </Row>
                     <Form>
-                        {g.locations.map((loc,index) => {
-                            return <Form.Group as={Row} controlId="formPlaintextUsername">
-                                <Form.Label column sm="2">
-                                    {loc}
-                                </Form.Label>
-                                <Col sm="10">
-                                    <Form.Control />
-                                </Col>
-                            </Form.Group>
-                        })}
+                        <Table hover>
+                            <thead>
+                                <tr>
+                                    <th><div style={{textAlign:'start'}}>Location</div></th>
+                                    <th><div style={{textAlign:'start'}}>Name</div></th>
+                                    <th><div style={{textAlign:'start'}}>Nickname</div></th>
+                                    <th><div style={{textAlign:'start'}}>Status</div></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {g.locations.map(loc => {
+                                    return <tr>
+                                        <td width="25%"><div style={{textAlign:'start'}}><h6>{loc}</h6></div></td>
+                                        <td><Form.Control type="text" placeholder="Pokemon" /></td>
+                                        <td><Form.Control type="text" /></td>
+                                        <td>
+                                            <Form.Control as="select" defaultValue="Choose...">
+                                                <option>Choose...</option>
+                                                <option>Captured</option>
+                                                <option>Received</option>
+                                                <option>Missed</option>
+                                                <option>Stored</option>
+                                                <option>Deceased</option>
+                                            </Form.Control>
+                                        </td>
+                                    </tr>
+                                })}
+                            </tbody>
+                        </Table>
                     </Form>
                     <Row className="row align-items-center">
                         <Col>
@@ -75,6 +94,7 @@ function Game(): JSX.Element {
                             </ButtonGroup>
                         </Col>
                     </Row>
+                    <br></br>
                 </Container>
                 : <div></div>
             })}
@@ -85,5 +105,4 @@ function Game(): JSX.Element {
 export default Game;
 
 //TODO:
-//      MAKE THE FORM APPEAR AS INTENDED
 //      BUTTON FUNCTIONALITY
