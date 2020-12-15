@@ -33,6 +33,6 @@ class RuleDetail(generics.RetrieveUpdateDestroyAPIView):
     #redefine get_queryset method
     def get_queryset(self):
         #retrieve the user info
-        user = self.request.user
+        user = self.request.user.id
         #return filtered objects WHERE author_id=users's id
         return Rule.objects.filter(author=user)

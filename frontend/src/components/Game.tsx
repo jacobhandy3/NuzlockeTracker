@@ -25,15 +25,17 @@ const defaultGames:IGame[] = [];
 function Game(): JSX.Element {
     //states
     const [games,setGames]: [IGame[], (games: IGame[]) => void] = React.useState(defaultGames)
-    const [loading,setLoading]: [boolean, (loading:boolean) => void] = React.useState<boolean>(true);
     //effects
     //GET LIST OF GAMES FROM API
     React.useEffect(() => {
         axios
-            .get<IGame[]>("http://127.0.0.1:8000/api/game/")
+            .get<IGame[]>("http://127.0.0.1:8000/api/game/", { headers: {
+                "Content-Type": "applications/json",
+                "Accept": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem('access_token'),
+            }})
             .then(response => {
             setGames(response.data);
-            setLoading(false);
             });
     }, []);
     //params
@@ -49,7 +51,6 @@ function Game(): JSX.Element {
                         <Col md={{ span: 6, offset: 2 }}><h1>{g.name}</h1></Col>
                         <Col md={{ span: 2, offset: 1 }}>
                             <ButtonGroup>
-                                <Button>Start Run</Button>
                                 <Button>End Run</Button>
                             </ButtonGroup>
                         </Col>

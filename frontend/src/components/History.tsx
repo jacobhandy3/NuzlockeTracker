@@ -25,7 +25,11 @@ import {
       //effects
       //GET HISTORY LIST FROM API
       React.useEffect(() => {
-          axios.get<IHistory[]>("http://127.0.0.1:8000/api/history/").then(response => {
+          axios.get<IHistory[]>("http://127.0.0.1:8000/api/history/", { headers: {
+            "Content-Type": "applications/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem('access_token'),
+        }}).then(response => {
                     setHistory(response.data);
                     setLoading(false);
                     console.log(response.data);
@@ -35,10 +39,15 @@ import {
           <div>
               {history.map(h => {
                   return <Container fluid>
+                    <br></br>
                     <Card key={h.slug}>
                         <Card.Header>
-                            {h.title}
-                            <Button variant="danger" href="">X</Button>
+                            <Row className="row align-items-center">
+                                <Col md={{ span: 8, offset: 2 }}>{h.title}</Col>
+                                <Col md={{ span: 1, offset: 1 }}>
+                                <Button variant="danger" href="">X</Button>
+                                </Col>
+                            </Row>
                         </Card.Header>
                         <Card.Body><Card.Text>{h.body}</Card.Text></Card.Body>
                         <Card.Footer className="text-muted">
@@ -48,6 +57,7 @@ import {
                             </Row>
                         </Card.Footer>
                     </Card>
+                    <br></br>
                 </Container>
               })}
             </div>

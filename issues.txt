@@ -1,0 +1,8 @@
+BACKEND:
+========
+Sign Up: API functionality
+
+FRONTEND:
+=========
+Rules: Create Rules funtionality
+Game: connect with Team API

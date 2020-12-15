@@ -1,11 +1,11 @@
 from django.contrib import admin
-from .models import userRuns
+from .models import gameNum
 
 #describe model to admin interface
 class RunsAdmin(admin.ModelAdmin):
     #list_display lists fields of the model
-    list_display = ('completed_runs','user_id')
+    list_display = ('completed_runs','userID')
 
 
 # Register your models here.
-admin.site.register(userRuns, RunsAdmin)
+admin.site.register(gameNum, RunsAdmin)

@@ -3,19 +3,31 @@ import axios from 'axios';
 import { Modal,Button,Form,Row,Col } from "react-bootstrap";
 
 interface IProfile {
-    username: string,
-    date_joined: Date,
+    user_name: string,
+    user_join: Date,
     completed_runs: number,
 }
-const defaultProfile:IProfile[] = []
+const defaultProfile:IProfile = {user_name:"",user_join:new Date(Date.now()),completed_runs:0}
 
 function ProfileModal() {
-    const [profile,setProfile]: [IProfile[], (profile: IProfile[]) => void] = React.useState(defaultProfile);
+    //states
+    const [profile,setProfile]: [IProfile, (profile: IProfile) => void] = React.useState(defaultProfile);
     const [show, setShow]: [boolean, (show:boolean) => void] = React.useState<boolean>(false);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-
+    //effects
+    //get current user info
+    React.useEffect(() => {
+        axios.get<IProfile>("http://127.0.0.1:8000/accounts/profile/", {headers: {
+            "Content-Type": "applications/json",
+            "Accept": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem('access_token')
+        }})
+        .then(response => {
+            setProfile(response.data);
+            });
+    },[]);
     return (
         <>
             <Button onClick={handleShow}>Profile</Button>
@@ -32,23 +44,24 @@ function ProfileModal() {
                                 Username
                             </Form.Label>
                             <Col sm="10">
-                                <Form.Control plaintext readOnly defaultValue="profile[0].username" />
+                                <Form.Control plaintext readOnly defaultValue={profile.user_name} />
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} controlId="formPlaintextPassword">
                             <Form.Label column sm="2">
                                 Password
                             </Form.Label>
-                            <Col sm="10">
+                            <Col sm="8">
                                 <Form.Control type="password" placeholder="Password" />
                             </Col>
+                            <Col><Button>Change</Button></Col>
                         </Form.Group>
                         <Form.Group as={Row} controlId="formPlaintextJoinedDate">
                             <Form.Label column sm="2">
                                 Joined
                             </Form.Label>
                             <Col sm="10">
-                                <Form.Control plaintext readOnly defaultValue="Intl.DateTimeFormat('en-US', {year: 'numeric', month: '2-digit',day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'}).format(new Date(profile[0].date_joined))" />
+                                <Form.Control plaintext readOnly defaultValue={Intl.DateTimeFormat('en-US', {year: 'numeric', month: '2-digit',day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'}).format(new Date(profile.user_join))} />
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} controlId="formPlaintextCompleteRuns">
@@ -56,7 +69,7 @@ function ProfileModal() {
                                 Completed Runs
                             </Form.Label>
                             <Col sm="10">
-                                <Form.Control plaintext readOnly defaultValue="profile[0].completed_runs" />
+                                <Form.Control plaintext readOnly defaultValue={profile.completed_runs} />
                             </Col>
                         </Form.Group>
                     </Form>
@@ -72,4 +85,3 @@ function ProfileModal() {
 export default ProfileModal;
 // TODO:
 //      PASSWORD CHANGE FUNCTIONALITY
-//      GET PROFILE INFO IN useEffect()
