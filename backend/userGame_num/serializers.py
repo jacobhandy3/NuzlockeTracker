@@ -2,11 +2,6 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from .models import *
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = get_user_model()
-        fields = ('username','date_joined')
-
 #serializer for model 'Rule' for JSON conversion for the frontend
 class RunsSerializer(serializers.ModelSerializer):
     user_name = serializers.CharField(source='userID.username')
@@ -16,3 +11,14 @@ class RunsSerializer(serializers.ModelSerializer):
         model = gameNum
         #list fields
         fields = ('userID','completed_runs','user_name','user_join',)
+
+class CUUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = ('username','password')
+        
+    def create(self, validated_data):
+        user = User.objects.create_user(
+            username = validated_data['username'],
+            password = validated_data['password']
+        )

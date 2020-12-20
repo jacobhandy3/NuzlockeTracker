@@ -22,11 +22,12 @@ function CreateGame(): JSX.Element {
     const [loc,setLoc]: [string,(loc: string) => void] = React.useState("")
     const handleSubmit = async () => {
         try {
-            const response = await axiosInstance.post('/rules/', {
+            const response = await axiosInstance.post('/game/create/', {
                 name: games.name,
                 region: games.region,
                 locations: games.locations,
             })
+            console.log(response)
         } catch (error) {
             throw error;
         }

@@ -15,6 +15,17 @@ interface IGame {
     locations: Array<string>,
     slug: string,
   }
+  //interface for list of teammates from API
+interface ITeam {
+    name: string,
+    nickname: string,
+    location: number,
+    captured: Date,
+    received: Date,
+    missed: Date,
+    stored: Date,
+    deceased: Date,
+}
 //interface for params to use slug to display 1 game at a time
 interface IParams {
     slug: string
@@ -49,10 +60,8 @@ function Game(): JSX.Element {
                     <Row className="row align-items-center">
                         <Col md={{ span: 1, offset: 0 }}><h5>{g.region}</h5></Col>
                         <Col md={{ span: 6, offset: 2 }}><h1>{g.name}</h1></Col>
-                        <Col md={{ span: 2, offset: 1 }}>
-                            <ButtonGroup>
-                                <Button>End Run</Button>
-                            </ButtonGroup>
+                        <Col md={{ span: 1, offset: 2 }}>
+                            <Button>End Run</Button>
                         </Col>
                     </Row>
                     <Form>
@@ -62,7 +71,11 @@ function Game(): JSX.Element {
                                     <th><div style={{textAlign:'start'}}>Location</div></th>
                                     <th><div style={{textAlign:'start'}}>Name</div></th>
                                     <th><div style={{textAlign:'start'}}>Nickname</div></th>
-                                    <th><div style={{textAlign:'start'}}>Status</div></th>
+                                    <th><div style={{textAlign:'start'}}>Captured</div></th>
+                                    <th><div style={{textAlign:'start'}}>Received</div></th>
+                                    <th><div style={{textAlign:'start'}}>Missed</div></th>
+                                    <th><div style={{textAlign:'start'}}>Stored</div></th>
+                                    <th><div style={{textAlign:'start'}}>Deceased</div></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -71,16 +84,11 @@ function Game(): JSX.Element {
                                         <td width="25%"><div style={{textAlign:'start'}}><h6>{loc}</h6></div></td>
                                         <td><Form.Control type="text" placeholder="Pokemon" /></td>
                                         <td><Form.Control type="text" /></td>
-                                        <td>
-                                            <Form.Control as="select" defaultValue="Choose...">
-                                                <option>Choose...</option>
-                                                <option>Captured</option>
-                                                <option>Received</option>
-                                                <option>Missed</option>
-                                                <option>Stored</option>
-                                                <option>Deceased</option>
-                                            </Form.Control>
-                                        </td>
+                                        <td><Form.Check custom type="checkbox" id="captured"/></td>
+                                        <td><Form.Check custom type="checkbox" id="received"/></td>
+                                        <td><Form.Check custom type="checkbox" id="missed"/></td>
+                                        <td><Form.Check custom type="checkbox" id="stored"/></td>
+                                        <td><Form.Check custom type="checkbox" id="deceased"/></td>
                                     </tr>
                                 })}
                             </tbody>

@@ -35,6 +35,7 @@ import {
                     console.log(response.data);
                 });
       }, []);
+      if(history.length !== 0){
       return (
           <div>
               {history.map(h => {
@@ -61,10 +62,7 @@ import {
                 </Container>
               })}
             </div>
-      )
+      )}else{return <div><h3>You don't have any completed runs!</h3></div>}
   }
 
   export default History;
-
-  //TODO:
-  //    NOT RECEIVING DATA FROM API BUT REQUEST MADE IN DJANGO

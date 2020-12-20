@@ -1,8 +1,19 @@
 BACKEND:
 ========
-Sign Up: API functionality
+Profile: increment completed_runs when called
 
 FRONTEND:
 =========
-Rules: Create Rules funtionality
+Rules: Add Rules funtionality
+
 Game: connect with Team API
+    : update Team functionality
+    : end run -> create history functionality + increment completed_runs
+    : import/export Team data
+    : clear the Team data
+    
+Create Game: prettify UI
+Profile: password change functionality
+History: delete and edit functionality
+
+JWT-authentication: refresh the user's token

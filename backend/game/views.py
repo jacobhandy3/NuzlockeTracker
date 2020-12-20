@@ -17,7 +17,7 @@ class GameList(generics.ListAPIView):
     #redefined method to exclude other user-defined games
     def get_queryset(self):
         user = self.request.user.id
-        return Game.objects.filter(Q(contributor=1) | Q(contributor=user))
+        return Game.objects.filter(Q(contributor=1) | Q(contributor=user)).order_by('id')
 
 #Manage individual games for get, patch, and delete needs
 #only allows owner for non-safe methods like patch and delete
