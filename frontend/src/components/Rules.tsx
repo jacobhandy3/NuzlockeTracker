@@ -5,7 +5,10 @@ import {
   Button,
   Container, Row, Col,
   CardColumns, Card,
+  Modal,
+  Form,
 } from 'react-bootstrap';
+import slugify from 'slugify';
 
 //interface for rules sent by API
 interface IRule {
@@ -25,13 +28,20 @@ function Rules(): JSX.Element {
     const [rules,setRules]: [IRule[], (rules: IRule[]) => void] = React.useState(defaultRules);
     const [customRule,setCustomRule]: [newRule,(customRule: newRule) => void] = React.useState({title:"",body:""})
     const [loading,setLoading]: [boolean, (loading:boolean) => void] = React.useState<boolean>(true);
-    
+    const [show, setShow]: [boolean, (show:boolean) => void] = React.useState<boolean>(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
     const handleSubmit = async () => {
         try {
-            const response = await axiosInstance.post('/rules/', {
+            const response = await axiosInstance.post('api/rules/', {
                 title: customRule.title,
                 body: customRule.body,
-            })
+                slug: slugify(customRule.title,{lower:true,strict:true}),
+            });
+            console.log(response);
+            window.location.reload();
         } catch (error) {
             throw error;
         }
@@ -91,7 +101,31 @@ function Rules(): JSX.Element {
                     </Card>
                 })}
             </CardColumns>
-            <Button>Add a Rule</Button>
+            <Button onClick={handleShow}>Add a Rule</Button>
+            <Modal show={show} onHide={handleClose} size="lg" aria-labelledby="container-modal-title-vcenter" centered>
+                <Modal.Header closeButton><h3>Add a Rule</h3></Modal.Header>
+                <Modal.Body>
+                <Form>
+                        <Form.Group as={Row} controlId="formPlaintextTitle">
+                            <Form.Label column sm="2">
+                                Title
+                            </Form.Label>
+                            <Col sm="10">
+                                <Form.Control value={customRule.title} onChange={handleChange_title}/>
+                            </Col>
+                        </Form.Group>
+                        <Form.Group as={Row} controlId="formPlaintextBody">
+                            <Form.Label column sm="2">
+                                Body
+                            </Form.Label>
+                            <Col sm="10">
+                                <Form.Control as="textarea" value={customRule.body} onChange={handleChange_body}/>
+                            </Col>
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer><Button onClick={handleSubmit}>Submit</Button></Modal.Footer>
+            </Modal>
         </Container>
         <br></br>
         </>

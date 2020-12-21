@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import axiosInstance from "../axiosAPI";
 import { useParams } from 'react-router-dom';
 import {
     Button, ButtonGroup,
@@ -10,6 +11,7 @@ import {
 
 //interface for games from API
 interface IGame {
+    id: number,
     name: string,
     region: string,
     locations: Array<string>,
@@ -36,7 +38,17 @@ const defaultGames:IGame[] = [];
 function Game(): JSX.Element {
     //states
     const [games,setGames]: [IGame[], (games: IGame[]) => void] = React.useState(defaultGames)
+    //params
+    const { slug } = useParams<IParams>();
     //effects
+    const handleEnd = async (g:IGame) => {
+        try {
+            const responseCompleteRuns = await axiosInstance.patch('accounts/profile/update');
+            const responseHistory = await axiosInstance.post('http://127.0.0.1:8000/api/history/create/' + g.id.toString());
+            console.log(responseCompleteRuns);
+            console.log(responseHistory);
+        } catch (error) { throw(error); }
+    }
     //GET LIST OF GAMES FROM API
     React.useEffect(() => {
         axios
@@ -49,8 +61,6 @@ function Game(): JSX.Element {
             setGames(response.data);
             });
     }, []);
-    //params
-    const { slug } = useParams<IParams>();
 
     return(
         <div>
@@ -61,7 +71,7 @@ function Game(): JSX.Element {
                         <Col md={{ span: 1, offset: 0 }}><h5>{g.region}</h5></Col>
                         <Col md={{ span: 6, offset: 2 }}><h1>{g.name}</h1></Col>
                         <Col md={{ span: 1, offset: 2 }}>
-                            <Button>End Run</Button>
+                            <Button onClick={() => handleEnd(g)} href="http://127.0.0.1:3000/history">End Run</Button>
                         </Col>
                     </Row>
                     <Form>
@@ -112,6 +122,3 @@ function Game(): JSX.Element {
 }
 
 export default Game;
-
-//TODO:
-//      BUTTON FUNCTIONALITY

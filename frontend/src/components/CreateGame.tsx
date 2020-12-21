@@ -32,9 +32,7 @@ function CreateGame(): JSX.Element {
             throw error;
         }
     }
-    const handleChange_loc = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setLoc(e.target.value);
-    }
+    const handleChange_loc = (e: React.ChangeEvent<HTMLInputElement>) => {setLoc(e.target.value);}
     const handleChange_version = (e: React.ChangeEvent<HTMLInputElement>) => {
         setGames({
             name: e.target.value,
@@ -49,12 +47,16 @@ function CreateGame(): JSX.Element {
             locations: games.locations,
         });
     }
-    const handleLocations = () => {
-        setGames({
-            name: games.name,
-            region: games.region,
-            locations: [...games.locations, loc],
-        });
+    const handleLocations = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if(e.key === "Enter")
+        {
+            setGames({
+                name: games.name,
+                region: games.region,
+                locations: [...games.locations, loc],
+            });
+        }
+        
     }
 
     return(
@@ -99,22 +101,28 @@ function CreateGame(): JSX.Element {
                             </InputGroup>
                         </Col>
                     </Form.Group>
-                    <h5>Locations</h5>
                     <Form.Group as={Row}>
-                        <Col md={{ span: 2, offset: 5 }}>
+                        <Col md={{ span: 6, offset: 3 }}>
                             <InputGroup className="mb-3">
+                                <InputGroup.Prepend>
+                                <InputGroup.Text id="inputGroup-sizing-default">Location</InputGroup.Text>
+                                </InputGroup.Prepend>
                                 <FormControl
                                 name="locations"
-                                type="text"
+                                as="input"
+                                type="string"
                                 value={loc}
-                                onChange={handleChange_loc}/>
+                                onChange={handleChange_loc}
+                                onKeyPress={handleLocations}/>
                             </InputGroup>
+                            <Form.Text id="passwordHelpBlock" muted>Press Enter to Submit</Form.Text>
                         </Col>
-                        <Col md={{ span: 2, offset: 3 }}><Button onClick={handleLocations}>Add Location</Button></Col>
                     </Form.Group>
+                    <br></br>
+                    <h5>Location List</h5>
                     <ListGroup variant="flush">
                         {games.locations.map(loc => {
-                            return <ListGroup.Item>{loc}</ListGroup.Item>
+                            return <ListGroup.Item variant="success">{loc}</ListGroup.Item>
                         })}
                     </ListGroup>
                 </Form>

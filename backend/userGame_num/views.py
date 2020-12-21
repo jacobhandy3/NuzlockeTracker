@@ -23,3 +23,16 @@ class UserCreate(generics.CreateAPIView):
             serializer.save()
             return Response(status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+class RunsUpdate(generics.UpdateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = RunsSerializer
+    def get_object(self):
+        return gameNum.objects.get(Q(userID_id=self.request.user))
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        runNum = instance.completed_runs
+        serializer = self.get_serializer(instance,data=request.data,partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(completed_runs=runNum+1)
+        return Response(status=status.HTTP_202_ACCEPTED)

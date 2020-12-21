@@ -51,9 +51,6 @@ function ProfileModal() {
                             <Form.Label column sm="2">
                                 Password
                             </Form.Label>
-                            <Col sm="8">
-                                <Form.Control type="password" placeholder="Password" />
-                            </Col>
                             <Col><Button href="http://127.0.0.1:8000/accounts/profile/password_change/">Change</Button></Col>
                         </Form.Group>
                         <Form.Group as={Row} controlId="formPlaintextJoinedDate">

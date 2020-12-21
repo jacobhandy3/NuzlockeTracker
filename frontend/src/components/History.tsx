@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import axiosInstance from "../axiosAPI";
 import {
     Button,
     Container, Row, Col,
@@ -21,8 +22,12 @@ import {
       //states
       const [history,setHistory]: [IHistory[], (history: IHistory[]) => void] = React.useState(defaultHistory);
       const [loading,setLoading]: [boolean, (loading:boolean) => void] = React.useState<boolean>(true);
-    //   const [error,setError]: [string, (error:string) => void] = React.useState("");
       //effects
+      const handleDelete = async (h:IHistory) => {
+          const responseDelete = await axiosInstance.delete('http://127.0.0.1:8000/api/history' + h.slug);
+          console.log(responseDelete);
+          window.location.reload();
+      }
       //GET HISTORY LIST FROM API
       React.useEffect(() => {
           axios.get<IHistory[]>("http://127.0.0.1:8000/api/history/", { headers: {
@@ -46,7 +51,7 @@ import {
                             <Row className="row align-items-center">
                                 <Col md={{ span: 8, offset: 2 }}>{h.title}</Col>
                                 <Col md={{ span: 1, offset: 1 }}>
-                                <Button variant="danger" href="">X</Button>
+                                <Button variant="danger" onClick={() => handleDelete(h)}>X</Button>
                                 </Col>
                             </Row>
                         </Card.Header>
