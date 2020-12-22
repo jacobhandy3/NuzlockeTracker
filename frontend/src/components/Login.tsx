@@ -35,7 +35,7 @@ function LoginModal() {
                 username: login.username,
                 password: login.password,
             });
-            axiosInstance.defaults.headers['Authorization'] = "JWT " + response.data.access;
+            axiosInstance.defaults.headers['Authorization'] = "Bearer " + response.data.access;
             localStorage.setItem('access_token',response.data.access);
             localStorage.setItem('refresh_token',response.data.refresh);
             window.location.reload();

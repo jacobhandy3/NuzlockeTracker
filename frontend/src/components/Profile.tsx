@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import axiosRefresh from "../refreshToken";
 import { Modal,Button,Form,Row,Col } from "react-bootstrap";
 
 interface IProfile {
@@ -26,7 +27,19 @@ function ProfileModal() {
         }})
         .then(response => {
             setProfile(response.data);
-            });
+            })
+        .catch(async function (error) {
+            if(error.response.status === 401 && localStorage.getItem('refresh_token') !== null) {
+                try {
+                    const response = await axiosRefresh.post('', {
+                        refresh: localStorage.getItem('refresh_token')
+                    });
+                    localStorage.setItem('access_token',response.data.access);
+                } catch (error) {
+                    throw(error);
+                }
+            }
+        });
     },[]);
     return (
         <>

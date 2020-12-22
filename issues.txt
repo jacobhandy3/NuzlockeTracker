@@ -5,7 +5,4 @@ Game: connect with Team API
     : import/export Team data
     : clear the Team data
     
-Create Game: prettify UI
 History: edit functionality
-
-JWT-authentication: refresh the user's token

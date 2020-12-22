@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import axiosInstance from "../axiosAPI";
+import axiosRefresh from "../refreshToken";
 import {
     Button,
     Container, Row, Col,
@@ -38,6 +39,18 @@ import {
                     setHistory(response.data);
                     setLoading(false);
                     console.log(response.data);
+                })
+                .catch(async function (error) {
+                    if(error.response.status === 401 && localStorage.getItem('refresh_token') !== null) {
+                        try {
+                            const response = await axiosRefresh.post('', {
+                                refresh: localStorage.getItem('refresh_token')
+                            });
+                            localStorage.setItem('access_token',response.data.access);
+                        } catch (error) {
+                            throw(error);
+                        }
+                    }
                 });
       }, []);
       if(history.length !== 0){

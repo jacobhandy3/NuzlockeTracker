@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import axiosInstance from "../axiosAPI";
+import axiosRefresh from "../refreshToken";
 import { useParams } from 'react-router-dom';
 import {
     Button, ButtonGroup,
@@ -34,13 +35,16 @@ interface IParams {
 }
 //initialize state for interfaces
 const defaultGames:IGame[] = [];
+const defaultTeam:ITeam[] = [];
 
 function Game(): JSX.Element {
     //states
-    const [games,setGames]: [IGame[], (games: IGame[]) => void] = React.useState(defaultGames)
+    const [games,setGames]: [IGame[], (games: IGame[]) => void] = React.useState(defaultGames);
+    const [team,setTeam]: [ITeam[], (team: ITeam[]) => void] = React.useState(defaultTeam);
     //params
     const { slug } = useParams<IParams>();
-    //effects
+    //onClick events
+    //create history and increment completed runs when 'End Run' button is pressed
     const handleEnd = async (g:IGame) => {
         try {
             const responseCompleteRuns = await axiosInstance.patch('accounts/profile/update');
@@ -49,6 +53,13 @@ function Game(): JSX.Element {
             console.log(responseHistory);
         } catch (error) { throw(error); }
     }
+    //onChange events
+    // const handleName = (e: React.ChangeEvent<HTMLInputElement>,i:number) => {
+    //     setTeam({
+    //         name:e.target.value,
+    //         nickname:team[i].nickname,location:team[i].location,captured:team[i].captured,
+    //         received:team[i].received,stored:team[i].stored,deceased:team[i].deceased });}
+    //effects
     //GET LIST OF GAMES FROM API
     React.useEffect(() => {
         axios
@@ -59,6 +70,18 @@ function Game(): JSX.Element {
             }})
             .then(response => {
             setGames(response.data);
+            })
+            .catch(async function (error) {
+                if(error.response.status === 401 && localStorage.getItem('refresh_token') !== null) {
+                    try {
+                        const response = await axiosRefresh.post('', {
+                            refresh: localStorage.getItem('refresh_token')
+                        });
+                        localStorage.setItem('access_token',response.data.access);
+                    } catch (error) {
+                        throw(error);
+                    }
+                }
             });
     }, []);
 
@@ -109,7 +132,7 @@ function Game(): JSX.Element {
                             <ButtonGroup>
                                 <Button>Import</Button>
                                 <Button>Export</Button>
-                                <Button>Clear</Button>
+                                <Button onClick={() => {}}>Clear</Button>
                             </ButtonGroup>
                         </Col>
                     </Row>
