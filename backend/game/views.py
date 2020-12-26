@@ -19,18 +19,13 @@ class GameList(generics.ListAPIView):
         user = self.request.user.id
         return Game.objects.filter(Q(contributor=1) | Q(contributor=user)).order_by('id')
 
-#Manage individual games for get, patch, and delete needs
-#only allows owner for non-safe methods like patch and delete
+
 class GameDetail(generics.RetrieveUpdateDestroyAPIView):
-    #custom permission class that only allows non-safe API functionality for owners
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = GameSerializer
     #redefine lookup field to point to model's slug
     lookup_field = 'slug'
-    #redefined method to only display user-defined games
-    def get_queryset(self):
-        user = self.request.user.id
-        return Game.objects.filter(contributor=user)
+    queryset = Game.objects.all()
     
 #Creates custom games, separated from other views for planned creation web page
 class GameCreate(generics.CreateAPIView):

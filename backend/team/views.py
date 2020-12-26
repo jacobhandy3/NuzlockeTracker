@@ -12,7 +12,7 @@ from .serializers import *
 class TeamList(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = TeamSerializer
-    queryset = Team.objects.all()
+    queryset = Team.objects.all().order_by('location')
 
 class TeamDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]

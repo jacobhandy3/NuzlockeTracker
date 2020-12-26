@@ -9,7 +9,7 @@ class GameSerializer(serializers.ModelSerializer):
         #define target model
         model = Game
         #list fields
-        fields = ('contributor','name','region','locations','slug')
+        fields = ('id','contributor','name','region','locations','slug')
         extra_kwargs = {
             'url':{'view_name':'game-detail','lookup_field':'slug'}
         }
