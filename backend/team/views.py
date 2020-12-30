@@ -12,7 +12,8 @@ from .serializers import *
 class TeamList(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = TeamSerializer
-    queryset = Team.objects.all().order_by('location')
+    def get_queryset(self):
+        return Team.objects.filter(origin=self.kwargs['origin']).order_by('location')
 
 class TeamDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
