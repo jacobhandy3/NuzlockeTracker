@@ -20,7 +20,7 @@ class RuleList(generics.ListCreateAPIView):
         #retrieve the user info
         user = self.request.user.id
         #return filtered objects WHERE author_id=1 OR author_id=user's id
-        return Rule.objects.filter(Q(author=1) | Q(author=user))
+        return Rule.objects.filter(Q(author=1) | Q(author=user)).order_by('date_added')
 
 #Allows GET, PUT, and DELETE of specific rules for authenticated users
 class RuleDetail(generics.RetrieveUpdateDestroyAPIView):
