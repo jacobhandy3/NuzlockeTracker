@@ -45,8 +45,8 @@ function LoginModal() {
     return (
         <>
             <Button onClick={handleShow}>Login</Button>
-            <Modal show={show} onHide={handleClose} size="lg" aria-labelledby="container-modal-title-vcenter" centered>
-                <Modal.Header closeButton>
+            <Modal show={show} onHide={handleClose} size="sm" aria-labelledby="container-modal-title-vcenter" centered>
+                <Modal.Header style={{margin: "0 auto",}}>
                     <Modal.Title id="contained-modal-title-vcenter">
                         Login
                     </Modal.Title>
@@ -54,10 +54,7 @@ function LoginModal() {
                 <Modal.Body>
                     <Form>
                         <Form.Group as={Row} controlId="formPlaintextUsername">
-                            <Form.Label column sm="2">
-                                Username
-                            </Form.Label>
-                            <Col sm="10">
+                            <Col>
                                 <Form.Control
                                 name="username"
                                 type="text"
@@ -67,10 +64,7 @@ function LoginModal() {
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} controlId="formPlaintextPassword">
-                            <Form.Label column sm="2">
-                                Password
-                            </Form.Label>
-                            <Col sm="10">
+                            <Col>
                                 <Form.Control
                                 name="password"
                                 type="password"
@@ -79,17 +73,12 @@ function LoginModal() {
                                 onChange={handleChange_pass}/>
                             </Col>
                         </Form.Group>
-                        <Button onClick={handleSubmit}>Login</Button>
+                        <Row><Col md={{ span: 1, offset: 4 }}><Button onClick={handleSubmit}>Submit</Button></Col></Row>
                     </Form>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={handleClose}>Close</Button>
-                </Modal.Footer>
             </Modal>
         </>
     );
 }
 
 export default LoginModal;
-// TODO:
-//      LOGIN FUNCTIONALITY

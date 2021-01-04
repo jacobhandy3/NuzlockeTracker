@@ -121,8 +121,8 @@ function CreateGame(): JSX.Element {
                     <br></br>
                     <h5>Location List</h5>
                     <ListGroup variant="flush">
-                        {games.locations.map(loc => {
-                            return <ListGroup.Item variant="success">{loc}</ListGroup.Item>
+                        {games.locations.map((loc,index) => {
+                            return <ListGroup.Item variant="success" key={index}>{loc}</ListGroup.Item>
                         })}
                     </ListGroup>
                 </Form>

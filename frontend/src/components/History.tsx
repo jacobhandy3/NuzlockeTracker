@@ -77,7 +77,6 @@ import slugify from 'slugify';
         }}).then(response => {
                     setHistory(response.data);
                     setLoading(false);
-                    console.log(response.data);
                 })
                 .catch(async function (error) {
                     if(error.response.status === 401 && localStorage.getItem('refresh_token') !== null) {
@@ -93,70 +92,70 @@ import slugify from 'slugify';
                 });
       }, []);
       
-      if(history.length !== 0){
       return (
           <div>
-              {history.map(h => {
-                  return (edit) ? <Container fluid>
-                    <br></br>
-                    <Card key={h.slug}>
-                        <Card.Body>
-                            <Form>
-                                <Form.Group as={Row} >
-                                    <Form.Label column sm="2">
-                                        Title
-                                    </Form.Label>
-                                    <Col sm="10">
-                                        <Form.Control placeholder={h.title} value={newHistory.title} onChange={handleNewTitle}/>
+                <Row className="row align-items-center"><Col><h1>Your History</h1></Col></Row>
+                {history.map(h => {
+                    return (edit) ? <Container fluid>
+                        <br></br>
+                        <Card key={h.slug}>
+                            <Card.Body>
+                                <Form>
+                                    <Form.Group as={Row} >
+                                        <Form.Label column sm="2">
+                                            Title
+                                        </Form.Label>
+                                        <Col sm="10">
+                                            <Form.Control placeholder={h.title} value={newHistory.title} onChange={handleNewTitle}/>
+                                        </Col>
+                                    </Form.Group>
+                                    <Form.Group as={Row} >
+                                        <Form.Label column sm="2">
+                                            Body
+                                        </Form.Label>
+                                        <Col lg>
+                                            <Form.Control as="textarea" placeholder={h.body} value={newHistory.body} onChange={handleNewBody}/>
+                                        </Col>
+                                    </Form.Group>
+                                </Form>
+                            </Card.Body>
+                            <Card.Footer className="text-muted">
+                                <ButtonGroup>
+                                    <Button variant="success" onClick={() => handlePatch(h)}>S</Button>
+                                    <Button variant="warning" onClick={handleEdit}>C</Button>
+                                    <Button variant="danger" onClick={() => handleDelete(h)}>X</Button>
+                                </ButtonGroup>
+                            </Card.Footer>
+                        </Card>
+                        <br></br>
+                    </Container>
+                    : <Container fluid>
+                        <br></br>
+                        <Card key={h.slug}>
+                            <Card.Header>
+                                <Row className="row align-items-center">
+                                    <Col md={{ span: 8, offset: 2 }}>{h.title}</Col>
+                                    <Col md={{ span: 1, offset: 1 }}>
+                                        <ButtonGroup>
+                                            <Button variant="warning" onClick={handleEdit}>U</Button>
+                                            <Button variant="danger" onClick={() => handleDelete(h)}>X</Button>
+                                        </ButtonGroup>
                                     </Col>
-                                </Form.Group>
-                                <Form.Group as={Row} >
-                                    <Form.Label column sm="2">
-                                        Body
-                                    </Form.Label>
-                                    <Col lg>
-                                        <Form.Control as="textarea" placeholder={h.body} value={newHistory.body} onChange={handleNewBody}/>
-                                    </Col>
-                                </Form.Group>
-                            </Form>
-                        </Card.Body>
-                        <Card.Footer className="text-muted">
-                            <ButtonGroup>
-                                <Button variant="success" onClick={() => handlePatch(h)}>S</Button>
-                                <Button variant="warning" onClick={handleEdit}>C</Button>
-                                <Button variant="danger" onClick={() => handleDelete(h)}>X</Button>
-                            </ButtonGroup>
-                        </Card.Footer>
-                    </Card>
-                    <br></br>
-                </Container>
-                : <Container fluid>
-                    <br></br>
-                    <Card key={h.slug}>
-                        <Card.Header>
-                            <Row className="row align-items-center">
-                                <Col md={{ span: 8, offset: 2 }}>{h.title}</Col>
-                                <Col md={{ span: 1, offset: 1 }}>
-                                    <ButtonGroup>
-                                        <Button variant="warning" onClick={handleEdit}>U</Button>
-                                        <Button variant="danger" onClick={() => handleDelete(h)}>X</Button>
-                                    </ButtonGroup>
-                                </Col>
-                            </Row>
-                        </Card.Header>
-                        <Card.Body><Card.Text>{h.body}</Card.Text></Card.Body>
-                        <Card.Footer className="text-muted">
-                            <Row className="row align-items-center">
-                                <Col>{Intl.DateTimeFormat('en-US', {year: 'numeric', month: '2-digit',day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'}).format(new Date(h.start_date))}</Col>
-                                <Col>{Intl.DateTimeFormat('en-US', {year: 'numeric', month: '2-digit',day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'}).format(new Date(h.end_date))}</Col>
-                            </Row>
-                        </Card.Footer>
-                    </Card>
-                    <br></br>
-                </Container>
-              })}
+                                </Row>
+                            </Card.Header>
+                            <Card.Body><Card.Text>{h.body}</Card.Text></Card.Body>
+                            <Card.Footer className="text-muted">
+                                <Row className="row align-items-center">
+                                    <Col>{Intl.DateTimeFormat('en-US', {year: 'numeric', month: '2-digit',day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'}).format(new Date(h.start_date))}</Col>
+                                    <Col>{Intl.DateTimeFormat('en-US', {year: 'numeric', month: '2-digit',day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'}).format(new Date(h.end_date))}</Col>
+                                </Row>
+                            </Card.Footer>
+                        </Card>
+                        <br></br>
+                    </Container>
+                })}
             </div>
-      )}else{return <div><h3>You don't have any completed runs!</h3></div>}
+        )
   }
 
   export default History;

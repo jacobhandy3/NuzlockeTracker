@@ -1,6 +1,6 @@
 import React from 'react';
 import axiosInstance from "../axiosAPI";
-import { Modal,Button,Form } from "react-bootstrap";
+import { Modal,Button,Form,Row,Col, } from "react-bootstrap";
 
 //interface for new users
 interface InewUser {
@@ -57,31 +57,28 @@ function SignUpModal() {
         <>
             <Button onClick={handleShow}>Sign Up</Button>
             <Modal show={show} onHide={handleClose} size="lg" aria-labelledby="container-modal-title-vcenter" centered>
-                <Modal.Header closeButton>
+                <Modal.Header style={{margin: "0 auto",}}>
                     <Modal.Title id="contained-modal-title-vcenter">
                         Sign Up
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
-                        <Form.Group controlId="formBasicUsername">
-                            <Form.Label>Username</Form.Label>
-                            <Form.Control placeholder="Enter username" value={user.username} onChange={handleUsername}/>
+                        <Form.Group as={Row} controlId="formBasicUsername">
+                            <Form.Label column md={{ span: 2, offset: 1 }}>Username</Form.Label>
+                            <Col md={{ span: 7, offset: 1 }}><Form.Control placeholder="Enter a Unique Name" value={user.username} onChange={handleUsername}/></Col>
                         </Form.Group>
-                        <Form.Group controlId="formBasicPassword">
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" placeholder="Password" value={user.password} onChange={handlePassword}/>
+                        <Form.Group as={Row} controlId="formBasicPassword1">
+                            <Form.Label column md={{ span: 2, offset: 1 }}>Password</Form.Label>
+                            <Col md={{ span: 7, offset: 1 }}><Form.Control type="password" placeholder="Enter a Password" value={user.password} onChange={handlePassword}/></Col>
                         </Form.Group>
-                        <Form.Group controlId="formBasicPassword">
-                            <Form.Label>Confirm Password</Form.Label>
-                            <Form.Control type="password" placeholder="Password" value={user.passwordConfirm} onChange={handlePasswordConfirm}/>
+                        <Form.Group as={Row}>
+                            <Form.Label column md={{ span: 3, offset: 1 }}>Confirm Password</Form.Label>
+                            <Col md={{ span: 7, offset: 0 }}><Form.Control type="password" placeholder="Enter the Password Again" value={user.passwordConfirm} onChange={handlePasswordConfirm}/></Col>
                         </Form.Group>
-                        <Button variant="primary" type="submit" onClick={handleSubmit}>Submit</Button>
+                        <Form.Group as={Row}><Col md={{ span: 10, offset: 1 }}><Button onClick={handleSubmit} block size="lg">Submit</Button></Col></Form.Group>
                     </Form>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={handleClose}>Close</Button>
-                </Modal.Footer>
             </Modal>
         </>
     );

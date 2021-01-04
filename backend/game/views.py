@@ -29,8 +29,7 @@ class GameDetail(generics.RetrieveUpdateDestroyAPIView):
     
 #Creates custom games, separated from other views for planned creation web page
 class GameCreate(generics.CreateAPIView):
-    #custom permission class that only allows non-safe API functionality for owners
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [IsAuthenticated]
     serializer_class = GameSerializer
     #returns new object
     queryset = Game.objects.all()

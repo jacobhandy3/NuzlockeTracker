@@ -19,17 +19,19 @@ function ProfileModal() {
     const handleShow = () => setShow(true);
     //effects
     //get current user info
+    
     React.useEffect(() => {
+        let unmounted = false;
         axios.get<IProfile>("http://127.0.0.1:8000/accounts/profile/", {headers: {
             "Content-Type": "applications/json",
             "Accept": "application/json",
             "Authorization": "Bearer " + localStorage.getItem('access_token')
         }})
         .then(response => {
-            setProfile(response.data);
+            if(!unmounted){setProfile(response.data);}
             })
         .catch(async function (error) {
-            if(error.response.status === 401 && localStorage.getItem('refresh_token') !== null) {
+            if(error.response.status === 401 && localStorage.getItem('refresh_token') !== null && !unmounted) {
                 try {
                     const response = await axiosRefresh.post('', {
                         refresh: localStorage.getItem('refresh_token')
@@ -40,6 +42,7 @@ function ProfileModal() {
                 }
             }
         });
+        return () => { unmounted = true };
     },[]);
     return (
         <>
@@ -93,5 +96,3 @@ function ProfileModal() {
 }
 
 export default ProfileModal;
-// TODO:
-//      PASSWORD CHANGE FUNCTIONALITY

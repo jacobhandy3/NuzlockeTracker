@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import comic from '../assets/Basic_Nuzlocke_rules.webp';
 import axiosInstance from "../axiosAPI";
 import axiosRefresh from "../refreshToken";
 import {
@@ -138,6 +139,17 @@ function Rules(): JSX.Element {
 
     return(
         <>
+        <header className="App-header">
+            <h1>The Nuzlocke Challenge</h1>
+            <img src={comic} alt="comic" />
+            <p>
+                A set of rules intended to create a higher level of difficulty while playing the Pokémon games.
+            </p>
+            <a className="App-link"
+            href="http://www.nuzlocke.com/comics/pokemon-hard-mode/page/69/" target="_blank" rel="noopener noreferrer">
+                View the Comic
+            </a>
+        </header>
         {/* Container to hold Rules title and button to find suggested rules for Nuzlocke Challenge */}
         <Container fluid>
             <Row className="row align-items-center">
@@ -209,24 +221,24 @@ function Rules(): JSX.Element {
                 <Modal.Body>
                 <Form>
                         <Form.Group as={Row} >
-                            <Form.Label column sm="2">
-                                Title
+                            <Form.Label column md={{ span: 1, offset: 0 }}>
+                                <h5>Title</h5>
                             </Form.Label>
-                            <Col sm="10">
-                                <Form.Control value={customRule.title} onChange={handleChange_title}/>
+                            <Col md={{ span: 11, offset: 0 }}>
+                                <Form.Control value={customRule.title} onChange={handleChange_title} placeholder="Name of the Rule"/>
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} >
-                            <Form.Label column sm="2">
-                                Body
+                            <Form.Label column md={{ span: 1, offset: 0 }}>
+                                <h5>Body</h5>
                             </Form.Label>
-                            <Col sm="10">
-                                <Form.Control as="textarea" value={customRule.body} onChange={handleChange_body}/>
+                            <Col md={{ span: 11, offset: 0 }}>
+                                <Form.Control as="textarea" value={customRule.body} onChange={handleChange_body} placeholder="Rule Description"/>
                             </Col>
                         </Form.Group>
                     </Form>
                 </Modal.Body>
-                <Modal.Footer><Button onClick={handleSubmit}>Submit</Button></Modal.Footer>
+                <Modal.Footer style={{margin: "0 auto",}}><Button onClick={handleSubmit}>Submit</Button></Modal.Footer>
             </Modal>
         </Container>
         <br></br>
