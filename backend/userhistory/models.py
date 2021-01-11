@@ -22,7 +22,7 @@ class History(models.Model):
     #body detailing a pre-generated story based on the details in Pokemon table corresponding to the completed run
     body = models.TextField(blank=True,null=True)
     #slug for unique identification of each history
-    slug = models.SlugField(blank=True,null=True,unique=True)
+    slug = models.SlugField(blank=True,null=True,unique=True,max_length=201)
 
     def __str__(self):
         return self.title

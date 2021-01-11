@@ -9,18 +9,23 @@ from .serializers import *
 
 # Create your views here.
 
-class TeamList(generics.ListAPIView):
+class TeamListCreate(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = TeamSerializer
     def get_queryset(self):
         return Team.objects.filter(origin=self.kwargs['origin']).order_by('location')
+    def create(self, request, *args, **kwargs):
+        g = Game.objects.get(id=self.kwargs['origin'])
+        serializer = TeamSerializer(data=request.data,partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(trainer=request.user,origin=g)
+        return Response(serializer.data,status=status.HTTP_201_CREATED)
 
 class TeamDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = TeamSerializer
-    queryset = Team.objects.all()
-
-class TeamCreate(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = TeamSerializer
-    queryset = Team.objects.all()
+    def get_object(self):
+        return Team.objects.get(Q(pk=self.kwargs['pk']))
+    def partial_update(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return self.update(request, *args, **kwargs)

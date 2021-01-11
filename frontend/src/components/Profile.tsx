@@ -40,6 +40,7 @@ function ProfileModal() {
                 } catch (error) {
                     throw(error);
                 }
+                window.location.reload();
             }
         });
         return () => { unmounted = true };

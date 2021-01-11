@@ -83,14 +83,14 @@ function Rules(): JSX.Element {
     }
     //handle deletion of user's custom rules
     const handleDelete = async (slug:string) => {
-        const responseDelete = await axiosInstance.delete('http://127.0.0.1:8000/api/rules/' + slug);
+        const responseDelete = await axiosInstance.delete('api/rules/' + slug);
         console.log(responseDelete);
         window.location.reload();
     }
     //handle patch of user's custom rules
     const handlePatch = async (slug:string) => {
         try {
-            const responsePatch = await axiosInstance.patch(('http://127.0.0.1:8000/api/rules/' + slug + "/"), {
+            const responsePatch = await axiosInstance.patch(('api/rules/' + slug + "/"), {
                 title: updateRule.title,
                 body: updateRule.body,
                 slug: slugify(updateRule.title,{lower:true,strict:true}),
@@ -120,7 +120,6 @@ function Rules(): JSX.Element {
             },
             (error) => {
                 setLoading(true);
-                console.log(error);
             })
             .catch(async function (error) {
                 //Check for Unauthorized API Calls(401) and use the refresh token, if it exists, to get a new access token

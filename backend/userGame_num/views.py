@@ -34,5 +34,5 @@ class RunsUpdate(generics.UpdateAPIView):
         runNum = instance.completed_runs
         serializer = self.get_serializer(instance,data=request.data,partial=True)
         serializer.is_valid(raise_exception=True)
-        serializer.save(completed_runs=runNum+1)
+        serializer.save(completed_runs=(runNum+self.kwargs['num']))
         return Response(status=status.HTTP_202_ACCEPTED)

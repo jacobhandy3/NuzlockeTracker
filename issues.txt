@@ -1,8 +1,18 @@
 FRONTEND:
 =========
-Game: connect with Team API
-    : update Team functionality
-    : import/export Team data
-    : clear the Team data
+App: fix signed in state 
+
+Rules: prettify CRUD UI
+
+Game-Team: import/export Team data
     
-History: edit functionality
+History: prettify UI
+
+QoL issues:
+===========
+*Comments for FRONTEND
+*Error handling on FRONTEND
+*Clean up backend (login functionality + comments)
+*Clean up dependencies
+*Clean up inconsistencies in FRONTEND
+*Documentation

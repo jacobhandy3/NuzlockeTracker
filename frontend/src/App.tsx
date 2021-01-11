@@ -44,7 +44,6 @@ function App(): JSX.Element {
     axios
         .get<IGame[]>("http://127.0.0.1:8000/api/game/")
         .then(response => { setGames(response.data);})
-        .catch(err => {setError(err);});
   }, []);
 
   const Greeting = () => {
