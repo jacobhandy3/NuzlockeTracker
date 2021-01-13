@@ -33,10 +33,15 @@ function ProfileModal() {
         .catch(async function (error) {
             if(error.response.status === 401 && localStorage.getItem('refresh_token') !== null && !unmounted) {
                 try {
-                    const response = await axiosRefresh.post('', {
+                    await axiosRefresh.post('', {
                         refresh: localStorage.getItem('refresh_token')
+                    })
+                    .then(response => {
+                        localStorage.setItem('access_token',response.data.access);
+                    })
+                    .catch(async function (err) {
+                        localStorage.clear();
                     });
-                    localStorage.setItem('access_token',response.data.access);
                 } catch (error) {
                     throw(error);
                 }

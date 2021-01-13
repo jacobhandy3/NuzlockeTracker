@@ -1,6 +1,6 @@
 FRONTEND:
 =========
-App: fix signed in state 
+App: dark mode
 
 Rules: prettify CRUD UI
 
