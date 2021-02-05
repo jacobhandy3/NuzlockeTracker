@@ -1,12 +1,8 @@
 FRONTEND:
 =========
-App: dark mode
+App : set up listing custom games with buttons to delete ONLY custom games
 
-Rules: prettify CRUD UI
-
-Game-Team: import/export Team data
-    
-History: prettify UI
+Game+Team: import/export Team data
 
 QoL issues:
 ===========

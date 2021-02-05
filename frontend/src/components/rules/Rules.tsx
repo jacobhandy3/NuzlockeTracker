@@ -1,16 +1,19 @@
 import React from 'react';
 import axios from 'axios';
-import comic from '../assets/Basic_Nuzlocke_rules.webp';
-import axiosInstance from "../axiosAPI";
-import axiosRefresh from "../refreshToken";
+import comic from './assets/Basic_Nuzlocke_rules.webp';
+import axiosInstance from "../../axiosAPI";
+import axiosRefresh from "../../refreshToken";
 import {
   Button, ButtonGroup,
   Container, Row, Col,
   CardColumns, Card,
   Modal,
   Form,
+  Image,
 } from 'react-bootstrap';
 import slugify from 'slugify';
+import EditIcon from '@material-ui/icons/Edit';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 //interface for rules sent by API
 interface IRule {
@@ -120,28 +123,15 @@ function Rules(): JSX.Element {
             },
             (error) => {
                 setLoading(true);
-            })
-            .catch(async function (error) {
-                //Check for Unauthorized API Calls(401) and use the refresh token, if it exists, to get a new access token
-                if(error.response.status === 401 && localStorage.getItem('refresh_token') !== null) {
-                    try {
-                        const response = await axiosRefresh.post('', {
-                            refresh: localStorage.getItem('refresh_token')
-                        });
-                        localStorage.setItem('access_token',response.data.access);
-                    } catch (error) {
-                        throw(error);
-                    }
-                }
             });
     },[]);
 
     return(
         <>
         <header className="App-header">
-            <h1>The Nuzlocke Challenge</h1>
-            <img src={comic} alt="comic" />
-            <p>
+            <h1 style={{color:'green'}}>The Nuzlocke Challenge</h1>
+            <Image src={comic} alt="comic" fluid />
+            <p style={{color:'green'}}>
                 A set of rules intended to create a higher level of difficulty while playing the Pokémon games.
             </p>
             <a className="App-link"
@@ -166,7 +156,7 @@ function Rules(): JSX.Element {
                 {/* loop through rules and display them in cards with conditional content */}
                 {rules.map((rule,index) => {
                     // if the rule has a slug resembling the required rules then display the card with just its contents
-                    return (rule.slug.includes("rule-no-")) ? <Card key={index}>
+                    return (rule.slug.includes("rule-no-")) ? <Card key={index} bg="success" text="white">
                         <Card.Body>
                             <Card.Title>{rule.title}</Card.Title>
                             <Card.Text>{rule.body}</Card.Text>
@@ -174,7 +164,7 @@ function Rules(): JSX.Element {
                     </Card>
                     //if edit is true make card with forms to update
                     //and add button to save
-                    : (edit) ? <Card key={index}>
+                    : (edit) ? <Card key={index} bg="success" text="white">
                         <Card.Body>
                             <Form>
                                 <Form.Group as={Row} controlId="formPlaintextNewTitle">
@@ -195,21 +185,21 @@ function Rules(): JSX.Element {
                                 </Form.Group>
                             </Form>
                             <ButtonGroup size="sm">
-                                    <Button variant="success" size ="sm" onClick={() => {handlePatch(rule.slug)}}>save</Button>
-                                    <Button variant="warning" size="sm" onClick={handleEdit}>cancel</Button>
-                                    <Button variant="danger" size="sm" onClick={() => handleDelete(rule.slug)}>delete</Button>
+                                    <Button variant="dark" size ="sm" onClick={() => {handlePatch(rule.slug)}}>save</Button>
+                                    <Button variant="dark" size="sm" onClick={() => handleDelete(rule.slug)}>delete</Button>
+                                    <Button variant="dark" size="sm" onClick={handleEdit}>cancel</Button>
                             </ButtonGroup>
                         </Card.Body>
                     </Card>
                     //otherwise just a regular card with update and delete buttons
-                    : <Card key={index}>
+                    : <Card key={index} bg="success" text="white">
                         <Card.Body>
-                            <Card.Title>{rule.title}</Card.Title>
+                            <Row>
+                                <Col md={{ span: 1, offset: 0 }}><Button variant="success" size="sm" onClick={handleEdit}><EditIcon/></Button></Col>
+                                <Col md={{ span: 6, offset: 2 }}><Card.Title>{rule.title}</Card.Title></Col>
+                                <Col md={{ span: 1, offset: 1 }}><Button variant="success" size="sm" onClick={() => handleDelete(rule.slug)}><HighlightOffIcon/></Button></Col>
+                            </Row>
                             <Card.Text>{rule.body}</Card.Text>
-                            <ButtonGroup size="sm">
-                                <Button variant="warning" size="sm" onClick={handleEdit}>update</Button>
-                                <Button variant="danger" size="sm" onClick={() => handleDelete(rule.slug)}>delete</Button>
-                            </ButtonGroup>
                         </Card.Body>
                     </Card>})}
             </CardColumns>

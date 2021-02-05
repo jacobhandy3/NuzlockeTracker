@@ -52,7 +52,7 @@ function ProfileModal() {
     },[]);
     return (
         <>
-            <Button onClick={handleShow}>Profile</Button>
+            <Button onClick={handleShow} variant="dark">Profile</Button>
             <Modal show={show} onHide={handleClose} size="lg" aria-labelledby="container-modal-title-vcenter" centered>
                 <Modal.Header closeButton>
                     <Modal.Title id="contained-modal-title-vcenter">

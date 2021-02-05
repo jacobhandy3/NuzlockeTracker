@@ -1,5 +1,5 @@
 import React from 'react';
-import axiosInstance from "../axiosAPI";
+import axiosInstance from "../../axiosAPI";
 import {
     Button,
     Container, Row, Col,
@@ -7,6 +7,7 @@ import {
     InputGroup,
     ListGroup,
  } from 'react-bootstrap';
+ import slugify from 'slugify';
 
 interface IGame {
     name: string;
@@ -22,10 +23,11 @@ function CreateGame(): JSX.Element {
     const [loc,setLoc]: [string,(loc: string) => void] = React.useState("")
     const handleSubmit = async () => {
         try {
-            const response = await axiosInstance.post('/game/create/', {
+            const response = await axiosInstance.post('/api/game/create/', {
                 name: games.name,
                 region: games.region,
                 locations: games.locations,
+                slug: slugify(games.name,{lower:true,strict:true}),
             })
             console.log(response)
         } catch (error) {
@@ -56,7 +58,13 @@ function CreateGame(): JSX.Element {
                 locations: [...games.locations, loc],
             });
         }
-        
+    }
+    const handleDelLoc = (i:number) => {
+        setGames({
+            name:games.name,region:games.region,
+            locations: games.locations.splice(i,1)
+        })
+        console.log(games.locations)
     }
 
     return(
@@ -64,7 +72,7 @@ function CreateGame(): JSX.Element {
             <Container fluid>
                 <Row className="row align-items-center">
                     <Col md={{ span: 1, offset: 0 }}>
-                        <Button href="http://127.0.0.1:3000/rules/">Cancel</Button>
+                        <Button href="http://127.0.0.1:3000/">Cancel</Button>
                     </Col>
                     <Col md={{ span: 6, offset: 2 }}><h2>Add Custom Game</h2></Col>
                     <Col md={{ span: 1, offset: 2 }}>
@@ -122,7 +130,7 @@ function CreateGame(): JSX.Element {
                     <h5>Location List</h5>
                     <ListGroup variant="flush">
                         {games.locations.map((loc,index) => {
-                            return <ListGroup.Item variant="success" key={index}>{loc}</ListGroup.Item>
+                            return <ListGroup.Item variant="success" key={index}>{loc} <Button onClick={()=>{handleDelLoc(index)}}>-</Button></ListGroup.Item>
                         })}
                     </ListGroup>
                 </Form>

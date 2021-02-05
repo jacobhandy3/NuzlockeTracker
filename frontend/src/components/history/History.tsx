@@ -1,14 +1,16 @@
 import React from 'react';
 import axios from 'axios';
-import axiosInstance from "../axiosAPI";
-import axiosRefresh from "../refreshToken";
+import axiosInstance from "../../axiosAPI";
+import axiosRefresh from "../../refreshToken";
 import {
     Button, ButtonGroup,
     Container, Row, Col,
-    Card,
+    Card,CardGroup,
     Form,
 } from 'react-bootstrap';
 import slugify from 'slugify';
+import EditIcon from '@material-ui/icons/Edit';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
   interface IHistory {
       game: number,
@@ -95,10 +97,11 @@ import slugify from 'slugify';
       return (
           <div>
                 <Row className="row align-items-center"><Col><h1>Your History</h1></Col></Row>
-                {history.map(h => {
-                    return (edit) ? <Container fluid>
+                <CardGroup>
+                {history.map((h,index) => {
+                    return (edit) ? <Container>
                         <br></br>
-                        <Card key={h.slug}>
+                        <Card key={index} bg="info" text="white">
                             <Card.Body>
                                 <Form>
                                     <Form.Group as={Row} >
@@ -118,42 +121,33 @@ import slugify from 'slugify';
                                         </Col>
                                     </Form.Group>
                                 </Form>
-                            </Card.Body>
-                            <Card.Footer className="text-muted">
-                                <ButtonGroup>
-                                    <Button variant="success" onClick={() => handlePatch(h)}>S</Button>
-                                    <Button variant="warning" onClick={handleEdit}>C</Button>
-                                    <Button variant="danger" onClick={() => handleDelete(h)}>X</Button>
+                                <ButtonGroup size="sm">
+                                    <Button variant="dark" onClick={() => handlePatch(h)}>Save</Button>
+                                    <Button variant="dark" onClick={() => handleDelete(h)}>Delete</Button>
+                                    <Button variant="dark" onClick={handleEdit}>Cancel</Button>
                                 </ButtonGroup>
-                            </Card.Footer>
+                            </Card.Body>
                         </Card>
                         <br></br>
                     </Container>
-                    : <Container fluid>
+                    : <Container>
                         <br></br>
-                        <Card key={h.slug}>
-                            <Card.Header>
-                                <Row className="row align-items-center">
-                                    <Col md={{ span: 8, offset: 2 }}>{h.title}</Col>
-                                    <Col md={{ span: 1, offset: 1 }}>
-                                        <ButtonGroup>
-                                            <Button variant="warning" onClick={handleEdit}>U</Button>
-                                            <Button variant="danger" onClick={() => handleDelete(h)}>X</Button>
-                                        </ButtonGroup>
-                                    </Col>
-                                </Row>
-                            </Card.Header>
-                            <Card.Body><Card.Text>{h.body}</Card.Text></Card.Body>
-                            <Card.Footer className="text-muted">
-                                <Row className="row align-items-center">
-                                    <Col>{Intl.DateTimeFormat('en-US', {year: 'numeric', month: '2-digit',day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'}).format(new Date(h.start_date))}</Col>
-                                    <Col>{Intl.DateTimeFormat('en-US', {year: 'numeric', month: '2-digit',day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'}).format(new Date(h.end_date))}</Col>
-                                </Row>
-                            </Card.Footer>
+                        <Card key={index} bg="info" text="white">
+                            <Card.Body>
+                                <Card.Title>
+                                    <Row className="row align-items-center">
+                                        <Col md={{ span: 1, offset: 0 }}><Button variant="info" onClick={handleEdit}><EditIcon /></Button></Col>
+                                        <Col md={{ span: 8, offset: 1 }}>{h.title}</Col>
+                                        <Col md={{ span: 1, offset: 1 }}><Button variant="info" onClick={() => handleDelete(h)}><HighlightOffIcon /></Button></Col>
+                                    </Row>
+                                </Card.Title>
+                                <Card.Text>{h.body}</Card.Text>
+                            </Card.Body>
                         </Card>
                         <br></br>
                     </Container>
                 })}
+                </CardGroup>
             </div>
         )
   }

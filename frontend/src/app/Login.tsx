@@ -44,7 +44,7 @@ function LoginModal() {
     }
     return (
         <>
-            <Button onClick={handleShow}>Login</Button>
+            <Button onClick={handleShow} variant="dark">Login</Button>
             <Modal show={show} onHide={handleClose} size="sm" aria-labelledby="container-modal-title-vcenter" centered>
                 <Modal.Header style={{margin: "0 auto",}}>
                     <Modal.Title id="contained-modal-title-vcenter">

@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
-import axiosInstance from "../axiosAPI";
-import axiosRefresh from "../refreshToken";
+import axiosInstance from "../../axiosAPI";
+import axiosRefresh from "../../refreshToken";
 import { useParams } from 'react-router-dom';
 import {
     Button, ButtonGroup,
@@ -9,7 +9,7 @@ import {
     Table,
     Form,
     Modal,
-  } from 'react-bootstrap';
+} from 'react-bootstrap';
 
 //interface for games from API
 interface IGame {
@@ -185,7 +185,7 @@ function Game(): JSX.Element {
                     </Col>
                 </Row>
                 <Form>
-                    <Table hover>
+                    <Table responsive hover variant={(localStorage.getItem('darkMode') === "true") ? "dark" : undefined}>
                         <thead>
                             <tr>
                                 <th><div style={{textAlign:'start'}}>Location</div></th>
@@ -244,7 +244,7 @@ function Game(): JSX.Element {
                 <Row className="row align-items-center">
                     <Col>
                         <ButtonGroup>
-                            <Button onClick={() => {console.log(team)}}>Print Team</Button>
+                            <Button disabled={(team.teammates.length === 0)}>Import</Button>
                             <Button disabled={(team.teammates.length === 0)}>Export</Button>
                             <Button disabled={(team.teammates.length === 0)} onClick={handleYesDel}>Clear</Button>
                         </ButtonGroup>

@@ -14,14 +14,14 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #1a1919;
   min-height: 92vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: #999999;
 }
 
 .App-link {
@@ -57,4 +57,19 @@
 
 .myBtn:hover {
   background-color: #555;
+}
+
+.main-img {
+  width:900px !important;
+  height:373.5px !important;
+}
+
+body.light-mode {
+  background-color: #fff;
+  color: #333;
+  transition: background-color 0.3s ease;
+}
+body.dark-mode {
+  background-color: #1a1919;
+  color: #999999;
 }

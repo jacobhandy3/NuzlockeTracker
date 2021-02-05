@@ -5,6 +5,7 @@ sys.path.append(os.path.normpath(os.path.join(current_dir, '..', '..')))
 from django.db import models
 from django.contrib.auth.models import User
 from game.models import Game
+from django.urls import reverse
 # Create your models here.
 
 #model for keeping track of the user's completed runs in a pre-generated story
