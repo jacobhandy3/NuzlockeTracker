@@ -1,8 +1,10 @@
 FRONTEND:
 =========
-App : set up listing custom games with buttons to delete ONLY custom games
+History: make UI better
 
-Game+Team: import/export Team data
+CreateGame: make UI better, dynamic removal of submitted items
+
+Profile: make UI better
 
 QoL issues:
 ===========

@@ -29,3 +29,16 @@ class TeamDetail(generics.RetrieveUpdateDestroyAPIView):
     def partial_update(self, request, *args, **kwargs):
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)
+
+class TeamDeleteAll(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = TeamSerializer
+    #recreates destroy method to delete all Team objects with the user's id and the associated game
+    def destroy(self, request, *args, **kwargs):
+        #get the current game id passed in url
+        g = Game.objects.get(id=self.kwargs['origin'])
+        #create a query set with specified paramters
+        instance = Team.objects.filter(trainer=request.user,origin=g)
+        #delete all objects returned from the query set
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)

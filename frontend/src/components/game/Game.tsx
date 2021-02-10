@@ -46,14 +46,14 @@ const defaultMember:ITeam = {pk:-1,name:"",nickname:"",location:-1,captured:null
 
 function Game(): JSX.Element {
     //states
-    const [game,setGame]: [IGame, (games: IGame) => void] = React.useState(defaultGames);
+    const [game,setGame]: [IGame, (game: IGame) => void] = React.useState(defaultGames);
     const [team,setTeam] = React.useState<ICustomTeam>({teammates:[],member:defaultMember});
-    const [confirmDel,setConfirmDel] : [boolean, (confirmDel: boolean) => void] = React.useState<boolean>(false);
-    
+    const [confirmDel,setConfirmDel]: [boolean, (confirmDel: boolean) => void] = React.useState<boolean>(false);
+
     const handleYesDel = () => setConfirmDel(true);
     const handleNoDel = () => setConfirmDel(false);
     const handleChecked = (d:Date | null) => {return (d !== null) ? true : false}
-
+    
     //params
     const { slug } = useParams<IParams>();
     
@@ -80,6 +80,21 @@ function Game(): JSX.Element {
         else{tempArr.push({...team.member,location:loc,[ename]:dateNull})}
         setTeam({teammates:tempArr,member:defaultMember});
     }
+    const handleChgFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+        // set json file uploaded to variable if not null, otherwise pass a new blob b/c typescript is strict
+        let file = (e.target.files !== null) ? e.target.files[0] : new Blob();
+
+        let reader = new FileReader();
+        // read the json file data from newly created variable
+        reader.readAsText(file);
+        // close the deletion confirmation modal
+        handleNoDel();
+        // load the data into teammates array so the table can be updated
+        // NOTE: this does not submit the data to the database, 'Submit Changes' button still has to be pressed
+        reader.onload = function() {
+            setTeam({teammates:JSON.parse(reader.result as string),member:defaultMember});
+        };
+      }
     //onClick events
     //create history and increment completed runs when 'End Run' button is pressed
     
@@ -114,11 +129,13 @@ function Game(): JSX.Element {
         window.location.reload();
     }
     //delete current team
-    const handleDelete = () => {
-        console.log(team.teammates.map(tm => {
-            const responseDelete = axiosInstance.delete(("api/team/" + tm.pk + "/"));
-            return responseDelete;
-        }));
+    const handleDelete = async () => {
+        // delete all teammates from the database
+        const response = await axiosInstance.delete(("api/team/delete-all/" + game.id + "/"));
+        console.log(response.status);
+        // close the clear team confirmation modal
+        handleNoDel();
+        // clear teammates array to eliminate current data in table
         setTeam({teammates:[],member:defaultMember});
     }
     //effects
@@ -169,7 +186,6 @@ function Game(): JSX.Element {
                 }
             });
     }, [game.id]);
-
     //table building variables
     var teamIndex:number = 0;
     var currTI:number = teamIndex;
@@ -244,8 +260,8 @@ function Game(): JSX.Element {
                 <Row className="row align-items-center">
                     <Col>
                         <ButtonGroup>
-                            <Button disabled={(team.teammates.length === 0)}>Import</Button>
-                            <Button disabled={(team.teammates.length === 0)}>Export</Button>
+                            <Button><Form><Form.File id="custom-file" label="Import" onChange={handleChgFile} hidden/></Form></Button>
+                            <Button disabled={(team.teammates.length === 0)} onClick={()=>{downloadFile(team.teammates,'team_data.json','application/json;charset=utf-8;')}}>Export</Button>
                             <Button disabled={(team.teammates.length === 0)} onClick={handleYesDel}>Clear</Button>
                         </ButtonGroup>
                     </Col>
@@ -268,5 +284,42 @@ function Game(): JSX.Element {
         </div>
     )
 }
+
+//taken from: https://gist.github.com/dreamyguy/6b4ab77d2f118adb8a63c4a03fba349d
+function downloadFile(data:Object, filename:string, mime:string) {
+    // It is necessary to create a new blob object with mime-type explicitly set
+    // otherwise only Chrome works like it should
+    const blob = new Blob([decodeURIComponent(encodeURI(JSON.stringify(data)))], {type: mime || 'application/octet-stream'});
+    if (typeof window.navigator.msSaveBlob !== 'undefined') {
+      // IE doesn't allow using a blob object directly as link href.
+      // Workaround for "HTML7007: One or more blob URLs were
+      // revoked by closing the blob for which they were created.
+      // These URLs will no longer resolve as the data backing
+      // the URL has been freed."
+      window.navigator.msSaveBlob(blob, filename);
+      return;
+    }
+    // Other browsers
+    // Create a link pointing to the ObjectURL containing the blob
+    const blobURL = window.URL.createObjectURL(blob);
+    const tempLink = document.createElement('a');
+    tempLink.style.display = 'none';
+    tempLink.href = blobURL;
+    tempLink.setAttribute('download', filename);
+    // Safari thinks _blank anchor are pop ups. We only want to set _blank
+    // target if the browser does not support the HTML5 download attribute.
+    // This allows you to download files in desktop safari if pop up blocking
+    // is enabled.
+    if (typeof tempLink.download === 'undefined') {
+      tempLink.setAttribute('target', '_blank');
+    }
+    document.body.appendChild(tempLink);
+    tempLink.click();
+    document.body.removeChild(tempLink);
+    setTimeout(() => {
+      // For Firefox it is necessary to delay revoking the ObjectURL
+      window.URL.revokeObjectURL(blobURL);
+    }, 100);
+  }
 
 export default Game;

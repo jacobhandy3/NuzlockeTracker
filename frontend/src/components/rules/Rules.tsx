@@ -106,17 +106,15 @@ function Rules(): JSX.Element {
     }
 
     //effects
-    //required http headers for the API call
-    let auth:{[name:string]:string} = {
-        "Content-Type": "applications/json",
-        "Accept": "application/json",
-    }
-    //verify access token exists before making the GET request and add the 'Authorization' header
-    if(localStorage.getItem('access_token')!=null){auth.Authorization = "Bearer " + localStorage.getItem('access_token');}
     //GET API call for rules
     React.useEffect(() => {
         axios
-            .get<IRule[]>("http://127.0.0.1:8000/api/rules/", { headers: auth })
+            .get<IRule[]>("http://127.0.0.1:8000/api/rules/", { headers: 
+            {
+                "Content-Type": "applications/json",
+                "Accept": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem('access_token'),
+            } })
             .then(response => {
             setRules(response.data);
             setLoading(false);
@@ -129,9 +127,9 @@ function Rules(): JSX.Element {
     return(
         <>
         <header className="App-header">
-            <h1 style={{color:'green'}}>The Nuzlocke Challenge</h1>
+            <h1 style={{color:'#28a745'}}>The Nuzlocke Challenge</h1>
             <Image src={comic} alt="comic" fluid />
-            <p style={{color:'green'}}>
+            <p style={{color:'#28a745'}}>
                 A set of rules intended to create a higher level of difficulty while playing the Pokémon games.
             </p>
             <a className="App-link"
