@@ -53,49 +53,46 @@ function ProfileModal() {
     return (
         <>
             <Button onClick={handleShow} variant="dark">Profile</Button>
-            <Modal show={show} onHide={handleClose} size="lg" aria-labelledby="container-modal-title-vcenter" centered>
-                <Modal.Header closeButton>
+            <Modal show={show} onHide={handleClose} size="sm" aria-labelledby="container-modal-title-vcenter" centered>
+                <Modal.Header closeButton style={{color: 'black'}}>
                     <Modal.Title id="contained-modal-title-vcenter">
                         Your Profile
                     </Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body style={{color: 'black'}}>
                     <Form>
                         <Form.Group as={Row} controlId="formPlaintextUsername">
-                            <Form.Label column sm="2">
+                            <Col><Form.Label column >
                                 Username
-                            </Form.Label>
-                            <Col sm="10">
+                            </Form.Label></Col>
+                            <Col>
                                 <Form.Control plaintext readOnly defaultValue={profile.user_name} />
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} controlId="formPlaintextPassword">
-                            <Form.Label column sm="2">
+                            <Col><Form.Label column >
                                 Password
-                            </Form.Label>
+                            </Form.Label></Col>
                             <Col><Button href="http://127.0.0.1:8000/accounts/profile/password_change/">Change</Button></Col>
                         </Form.Group>
                         <Form.Group as={Row} controlId="formPlaintextJoinedDate">
-                            <Form.Label column sm="2">
+                            <Col><Form.Label column >
                                 Joined
-                            </Form.Label>
-                            <Col sm="10">
-                                <Form.Control plaintext readOnly defaultValue={Intl.DateTimeFormat('en-US', {year: 'numeric', month: '2-digit',day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'}).format(new Date(profile.user_join))} />
+                            </Form.Label></Col>
+                            <Col>
+                                <Form.Control plaintext readOnly defaultValue={Intl.DateTimeFormat('en-US', {year: 'numeric', month: '2-digit',day: '2-digit'}).format(new Date(profile.user_join))} />
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} controlId="formPlaintextCompleteRuns">
-                            <Form.Label column sm="2">
+                            <Col><Form.Label column >
                                 Completed Runs
-                            </Form.Label>
-                            <Col sm="10">
+                            </Form.Label></Col>
+                            <Col>
                                 <Form.Control plaintext readOnly defaultValue={profile.completed_runs} />
                             </Col>
                         </Form.Group>
                     </Form>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={handleClose}>Close</Button>
-                </Modal.Footer>
             </Modal>
         </>
     );

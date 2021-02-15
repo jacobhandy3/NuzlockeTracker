@@ -3,8 +3,7 @@ import axios from 'axios';
 import axiosRefresh from "../refreshToken";
 import './App.css';
 import {
-  Button,
-  Navbar, Nav, NavDropdown,
+  Navbar, Nav, NavDropdown,Dropdown,
 } from 'react-bootstrap';
 import { Switch, Route, } from 'react-router-dom';
 import useDarkMode from 'use-dark-mode';
@@ -15,7 +14,6 @@ import CreateGame from '../components/create-game/CreateGame';
 import History from '../components/history/History';
 import ProtectedRoute from './ProtectedRoute';
 import Greeting from './Greeting';
-import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 //interface for games to list in dropdown nav
 interface IGame {
@@ -30,9 +28,9 @@ const defaultGames:IGame[] = [];
 function App(): JSX.Element {
   const darkMode = useDarkMode(false);
   //states
-  const [games,setGames]: [IGame[], (games: IGame[]) => void] = React.useState(defaultGames)
-  const [error,setError]: [string, (error:string) => void] = React.useState("");
-  
+  const [games,setGames]: [IGame[], (games: IGame[]) => void] = React.useState(defaultGames);
+  const [customGames,setCustomGames]: [IGame[], (customGames: IGame[]) => void] = React.useState(defaultGames);
+
   //effects
   //GET LIST OF GAMES FROM API
   React.useEffect(() => {
@@ -40,9 +38,18 @@ function App(): JSX.Element {
         .get<IGame[]>("http://127.0.0.1:8000/api/game/", { headers: {
           "Content-Type": "applications/json",
           "Accept": "application/json",
+        }})
+        .then(response => { setGames(response.data);});
+  }, []);
+  //GET LIST OF CUSTOM GAMES FROM API
+  React.useEffect(() => {
+    axios
+        .get<IGame[]>("http://127.0.0.1:8000/api/game/custom/", { headers: {
+          "Content-Type": "applications/json",
+          "Accept": "application/json",
           "Authorization": "Bearer " + localStorage.getItem('access_token'),
         }})
-        .then(response => { setGames(response.data);console.log(response.data)})
+        .then(response => { setCustomGames(response.data);})
         .catch(async function(error) {
           if(error.response.status === 401 && localStorage.getItem('refresh_token') !== null) {
             try {
@@ -69,8 +76,11 @@ function App(): JSX.Element {
             <NavDropdown title="Games" id="collasible-nav-dropdown">
               <>
               {games.map((g,index) => {
-              return (index < 12) ? <NavDropdown.Item href={"/game/" + g.slug} key={index}>{g.name}</NavDropdown.Item>
-              : <NavDropdown.Item href={"/game/" + g.slug} key={g.slug}>{g.name} <Button size="sm" variant="link"><HighlightOffIcon /></Button></NavDropdown.Item>
+                return <NavDropdown.Item href={"/game/" + g.slug} key={index}>{g.name}</NavDropdown.Item>
+              })}
+              <Dropdown.Divider />
+              {customGames.map((cg,index) => {
+                return <NavDropdown.Item href={"/game/" + cg.slug} key={index}>{cg.name}</NavDropdown.Item>
               })}
               </>
             <NavDropdown.Item href={"/create-game"}>Create Your Own</NavDropdown.Item>
@@ -90,7 +100,6 @@ function App(): JSX.Element {
         <ProtectedRoute isAuthenticated={(localStorage.getItem('access_token') !== null)}
         isAllowed={true} restrictedPath="/history" homePath="/" component={History}/>
       </Switch>
-      {error && <p className="error">{error}</p>}
     </div>
   );
 }

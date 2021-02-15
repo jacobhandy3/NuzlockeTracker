@@ -1,11 +1,3 @@
-FRONTEND:
-=========
-History: make UI better
-
-CreateGame: make UI better, dynamic removal of submitted items
-
-Profile: make UI better
-
 QoL issues:
 ===========
 *Comments for FRONTEND

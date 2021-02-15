@@ -5,7 +5,8 @@ import {
     Container, Row, Col,
     Form, FormControl,
     InputGroup,
-    ListGroup,
+    Table,
+    OverlayTrigger, Tooltip,
  } from 'react-bootstrap';
  import slugify from 'slugify';
 
@@ -21,6 +22,7 @@ function CreateGame(): JSX.Element {
     //states
     const [games,setGames]: [IGame, (games: IGame) => void] = React.useState(defaultGames)
     const [loc,setLoc]: [string,(loc: string) => void] = React.useState("")
+
     const handleSubmit = async () => {
         try {
             const response = await axiosInstance.post('/api/game/create/', {
@@ -34,7 +36,9 @@ function CreateGame(): JSX.Element {
             throw error;
         }
     }
-    const handleChange_loc = (e: React.ChangeEvent<HTMLInputElement>) => {setLoc(e.target.value);}
+    const handleChange_loc = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setLoc(e.target.value);
+    }
     const handleChange_version = (e: React.ChangeEvent<HTMLInputElement>) => {
         setGames({
             name: e.target.value,
@@ -57,14 +61,13 @@ function CreateGame(): JSX.Element {
                 region: games.region,
                 locations: [...games.locations, loc],
             });
+            setLoc("");
         }
     }
     const handleDelLoc = (i:number) => {
-        setGames({
-            name:games.name,region:games.region,
-            locations: games.locations.splice(i,1)
-        })
-        console.log(games.locations)
+        const locList = [...games.locations];
+        locList.splice(i,1);
+        setGames({name: games.name,region: games.region,locations: locList});
     }
 
     return(
@@ -87,10 +90,7 @@ function CreateGame(): JSX.Element {
                                 <InputGroup.Prepend>
                                 <InputGroup.Text id="inputGroup-sizing-default">Version</InputGroup.Text>
                                 </InputGroup.Prepend>
-                                <FormControl
-                                name="version"
-                                type="text"
-                                value={games.name}
+                                <FormControl name="version" type="text" placeholder="Name of the game" value={games.name}
                                 onChange={handleChange_version}/>
                             </InputGroup>
                         </Col>
@@ -101,10 +101,7 @@ function CreateGame(): JSX.Element {
                                 <InputGroup.Prepend>
                                 <InputGroup.Text id="inputGroup-sizing-default">Region</InputGroup.Text>
                                 </InputGroup.Prepend>
-                                <FormControl
-                                name="region"
-                                type="text"
-                                value={games.region}
+                                <FormControl name="region" type="text" placeholder="Name of the Region" value={games.region}
                                 onChange={handleChange_region}/>
                             </InputGroup>
                         </Col>
@@ -115,31 +112,32 @@ function CreateGame(): JSX.Element {
                                 <InputGroup.Prepend>
                                 <InputGroup.Text id="inputGroup-sizing-default">Location</InputGroup.Text>
                                 </InputGroup.Prepend>
-                                <FormControl
-                                name="locations"
-                                as="input"
-                                type="string"
-                                value={loc}
-                                onChange={handleChange_loc}
-                                onKeyPress={handleLocations}/>
+                                <FormControl name="locations" placeholder="Name of Towns, Cities, Routes, etc."
+                                as="input" type="string" value={loc} onChange={handleChange_loc} onKeyPress={handleLocations}/>
                             </InputGroup>
                             <Form.Text id="passwordHelpBlock" muted>Press Enter to Submit</Form.Text>
                         </Col>
                     </Form.Group>
-                    <br></br>
-                    <h5>Location List</h5>
-                    <ListGroup variant="flush">
-                        {games.locations.map((loc,index) => {
-                            return <ListGroup.Item variant="success" key={index}>{loc} <Button onClick={()=>{handleDelLoc(index)}}>-</Button></ListGroup.Item>
-                        })}
-                    </ListGroup>
                 </Form>
+                <h5>Location List</h5>
+                <Table responsive="sm">
+                    <tbody>
+                        {games.locations.map((loc,index) => {
+                            return <tr key={index}>
+                                <td style={{ borderTop: '0px' }}>
+                                    <OverlayTrigger placement="right" overlay={<Tooltip id="tooltip-disabled">Click to delete</Tooltip>}>
+                                        <span className="d-inline-block">
+                                            <Button variant="link" style={{ color: '#28a745' }} size="lg" onClick={()=>{handleDelLoc(index)}}>{loc}</Button>
+                                        </span>
+                                    </OverlayTrigger>
+                                </td>
+                            </tr>
+                        })}
+                    </tbody>
+                </Table>
             </Container>
         </div>
     )
 }
 
 export default CreateGame;
-
-// TODO:
-//      API FUNCTIONALITY

@@ -6,16 +6,20 @@ from .serializers import *
 
 # Create your views here.
 
-#Lists all the available games not only including main series games, but user-defined as well
+#Lists all the available games not only including main series games
 class GameList(generics.ListAPIView):
-    #restrict view access of user-defined games to logged in users
-    #but allows view access of default games to anyone
-    permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = GameSerializer
     #redefined get queryset method to include default games and user games
     def get_queryset(self):
+        return Game.objects.filter(Q(contributor=1)).order_by('id')
+
+class GameCustomList(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = GameSerializer
+    def get_queryset(self):
         user = self.request.user.id
-        return Game.objects.filter(Q(contributor=1) | Q(contributor=user)).order_by('id')
+        return Game.objects.filter(Q(contributor=user)).order_by('id')
+
 
 #Uses slug field to grab a specific object and perform retrievals, updates, and deletions
 class GameDetail(generics.RetrieveUpdateDestroyAPIView):

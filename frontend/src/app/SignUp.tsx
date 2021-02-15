@@ -57,12 +57,12 @@ function SignUpModal() {
         <>
             <Button onClick={handleShow} variant="dark">Sign Up</Button>
             <Modal show={show} onHide={handleClose} size="lg" aria-labelledby="container-modal-title-vcenter" centered>
-                <Modal.Header style={{margin: "0 auto",}}>
+                <Modal.Header style={{margin: "0 auto",color: 'black'}}>
                     <Modal.Title id="contained-modal-title-vcenter">
                         Sign Up
                     </Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body style={{color: 'black'}}>
                     <Form>
                         <Form.Group as={Row} controlId="formBasicUsername">
                             <Form.Label column md={{ span: 2, offset: 1 }}>Username</Form.Label>

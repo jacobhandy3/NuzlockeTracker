@@ -46,12 +46,12 @@ function LoginModal() {
         <>
             <Button onClick={handleShow} variant="dark">Login</Button>
             <Modal show={show} onHide={handleClose} size="sm" aria-labelledby="container-modal-title-vcenter" centered>
-                <Modal.Header style={{margin: "0 auto",}}>
+                <Modal.Header style={{margin: "0 auto",color: 'black'}}>
                     <Modal.Title id="contained-modal-title-vcenter">
                         Login
                     </Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body style={{color: 'black'}}>
                     <Form>
                         <Form.Group as={Row} controlId="formPlaintextUsername">
                             <Col>

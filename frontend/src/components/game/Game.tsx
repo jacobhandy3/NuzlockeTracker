@@ -126,7 +126,6 @@ function Game(): JSX.Element {
                     });
                 }}));
         } catch (error) { throw(error); }
-        window.location.reload();
     }
     //delete current team
     const handleDelete = async () => {
@@ -194,7 +193,7 @@ function Game(): JSX.Element {
             <Button disabled={(localStorage.getItem('access_token') === null)} className="myBtn" size="lg" onClick={handleCreatePatch}>Submit Changes</Button>
             <Container fluid>
                 <Row className="row align-items-center">
-                    <Col md={{ span: 1, offset: 0 }}><h5>{game.region}</h5></Col>
+                    <Col md={{ span: 1, offset: 0 }}><h2>{game.region}</h2></Col>
                     <Col md={{ span: 6, offset: 2 }}><h1>{game.name}</h1></Col>
                     <Col md={{ span: 1, offset: 2 }}>
                         <Button onClick={() => {handleEnd(game)}} >End Run</Button>
@@ -261,19 +260,21 @@ function Game(): JSX.Element {
                     <Col>
                         <ButtonGroup>
                             <Button><Form><Form.File id="custom-file" label="Import" onChange={handleChgFile} hidden/></Form></Button>
-                            <Button disabled={(team.teammates.length === 0)} onClick={()=>{downloadFile(team.teammates,'team_data.json','application/json;charset=utf-8;')}}>Export</Button>
-                            <Button disabled={(team.teammates.length === 0)} onClick={handleYesDel}>Clear</Button>
+                            <Button disabled={(team.teammates.length === 0)} style={{ paddingBottom: '13px'}}
+                            onClick={()=>{downloadFile(team.teammates,'team_data.json','application/json;charset=utf-8;')}}>Export</Button>
+                            <Button disabled={(team.teammates.length === 0)} style={{ paddingBottom: '13px'}}
+                            onClick={handleYesDel}>Clear</Button>
                         </ButtonGroup>
                     </Col>
                 </Row>
                 <br></br>
                 <Modal show={confirmDel} onHide={handleNoDel} size="sm" aria-labelledby="container-modal-title-vcenter" centered>
-                    <Modal.Header style={{margin: "0 auto",}}>
+                    <Modal.Header style={{margin: "0 auto",color: 'black'}}>
                         <Modal.Title id="contained-modal-title-vcenter">
                             Delete Team?
                         </Modal.Title>
                     </Modal.Header>
-                    <Modal.Body>
+                    <Modal.Body style={{margin: "0 auto",color: 'black'}}>
                         <ButtonGroup>
                             <Button onClick={handleDelete}>YES</Button>
                             <Button onClick={handleNoDel}>NO</Button>

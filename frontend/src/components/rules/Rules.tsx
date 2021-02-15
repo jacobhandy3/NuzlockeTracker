@@ -33,7 +33,6 @@ function Rules(): JSX.Element {
     //states
     const [rules,setRules]: [IRule[], (rules: IRule[]) => void] = React.useState(defaultRules);
     const [customRule,setCustomRule]: [newRule,(customRule: newRule) => void] = React.useState({title:"",body:""})
-    const [updateRule,setUpdateRule]: [newRule,(customRule: newRule) => void] = React.useState({title:"",body:""})
     const [loading,setLoading]: [boolean, (loading:boolean) => void] = React.useState<boolean>(true);
     const [show, setShow]: [boolean, (show:boolean) => void] = React.useState<boolean>(false);
     const [edit,setEdit]: [boolean, (show:boolean) => void] = React.useState<boolean>(false);
@@ -53,53 +52,54 @@ function Rules(): JSX.Element {
                 slug: slugify(customRule.title,{lower:true,strict:true}),
             });
             console.log(response);
-            window.location.reload();
+            rules.push({title:customRule.title,body:customRule.body,slug:slugify(customRule.title,{lower:true,strict:true})});
+            handleClose();
         } catch (error) {
             throw error;
         }
     }
-    //handle changes of Form Controls for new rules
-    const handleChange_title = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //handle changes of Form Controls for new rule
+    const handle_new_rule_title = (e: React.ChangeEvent<HTMLInputElement>) => {
         setCustomRule({
             title:e.target.value,
             body:customRule.body,
         });
     }
-    const handleChange_body = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handle_new_rule_body = (e: React.ChangeEvent<HTMLInputElement>) => {
         setCustomRule({
             title:customRule.title,
             body:e.target.value
         });
     }
     //handle changes of Form Controls for new rules
-    const handleUpdate_title = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setUpdateRule({
-            title:e.target.value,
-            body:updateRule.body,
-        });
+    const handleUpdate_title = (e: React.ChangeEvent<HTMLInputElement>,i:number) => {
+        const rulesCopy = [...rules];
+        rulesCopy[i].title = e.target.value;
+        setRules(rulesCopy);
     }
-    const handleUpdate_body = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setUpdateRule({
-            title:updateRule.title,
-            body:e.target.value
-        });
+    const handleUpdate_body = (e: React.ChangeEvent<HTMLInputElement>, i:number) => {
+        const rulesCopy = [...rules];
+        rulesCopy[i].body= e.target.value;
+        setRules(rulesCopy);
     }
     //handle deletion of user's custom rules
-    const handleDelete = async (slug:string) => {
-        const responseDelete = await axiosInstance.delete('api/rules/' + slug);
+    const handleDelete = async (r:IRule, i:number) => {
+        const ruleList = [...rules];
+        ruleList.splice(i,1);
+        setRules(ruleList);
+        const responseDelete = await axiosInstance.delete('api/rules/' + r.slug);
         console.log(responseDelete);
-        window.location.reload();
     }
     //handle patch of user's custom rules
-    const handlePatch = async (slug:string) => {
+    const handlePatch = async (r:IRule) => {
         try {
-            const responsePatch = await axiosInstance.patch(('api/rules/' + slug + "/"), {
-                title: updateRule.title,
-                body: updateRule.body,
-                slug: slugify(updateRule.title,{lower:true,strict:true}),
+            const responsePatch = await axiosInstance.patch(('api/rules/' + r.slug + "/"), {
+                title: r.title,
+                body: r.body,
+                slug: slugify(r.title,{lower:true,strict:true}),
             });
             console.log(responsePatch);
-            window.location.reload();
+            handleEdit();
         } catch (error) {
             throw error;
         }
@@ -121,6 +121,18 @@ function Rules(): JSX.Element {
             },
             (error) => {
                 setLoading(true);
+            })
+            .catch(async function (error) {
+                if(error.response.status === 401 && localStorage.getItem('refresh_token') !== null) {
+                    try {
+                        const response = await axiosRefresh.post('', {
+                            refresh: localStorage.getItem('refresh_token')
+                        });
+                        localStorage.setItem('access_token',response.data.access);
+                    } catch (error) {
+                        throw(error);
+                    }
+                }
             });
     },[]);
 
@@ -152,12 +164,12 @@ function Rules(): JSX.Element {
             {/* Display the card with rules as card columns */}
             <CardColumns>
                 {/* loop through rules and display them in cards with conditional content */}
-                {rules.map((rule,index) => {
+                {rules.map((r,index) => {
                     // if the rule has a slug resembling the required rules then display the card with just its contents
-                    return (rule.slug.includes("rule-no-")) ? <Card key={index} bg="success" text="white">
+                    return (r.slug.includes("rule-no-")) ? <Card key={index} bg="success" text="white">
                         <Card.Body>
-                            <Card.Title>{rule.title}</Card.Title>
-                            <Card.Text>{rule.body}</Card.Text>
+                            <Card.Title>{r.title}</Card.Title>
+                            <Card.Text>{r.body}</Card.Text>
                         </Card.Body>
                     </Card>
                     //if edit is true make card with forms to update
@@ -170,7 +182,7 @@ function Rules(): JSX.Element {
                                         Title
                                     </Form.Label>
                                     <Col sm="10">
-                                        <Form.Control placeholder={rule.title} value={updateRule.title} onChange={handleUpdate_title}/>
+                                        <Form.Control value={r.title} onChange={(e: React.ChangeEvent<HTMLInputElement>)=>{handleUpdate_title(e,index)}}/>
                                     </Col>
                                 </Form.Group>
                                 <Form.Group as={Row} controlId="formPlaintextNewBody">
@@ -178,13 +190,12 @@ function Rules(): JSX.Element {
                                         Body
                                     </Form.Label>
                                     <Col sm="10">
-                                        <Form.Control as="textarea" placeholder={rule.body} value={updateRule.body} onChange={handleUpdate_body}/>
+                                        <Form.Control as="textarea" rows={3} value={r.body} onChange={(e: React.ChangeEvent<HTMLInputElement>)=>{handleUpdate_body(e,index)}}/>
                                     </Col>
                                 </Form.Group>
                             </Form>
                             <ButtonGroup size="sm">
-                                    <Button variant="dark" size ="sm" onClick={() => {handlePatch(rule.slug)}}>save</Button>
-                                    <Button variant="dark" size="sm" onClick={() => handleDelete(rule.slug)}>delete</Button>
+                                    <Button variant="dark" size ="sm" onClick={() => {handlePatch(r)}}>save</Button>
                                     <Button variant="dark" size="sm" onClick={handleEdit}>cancel</Button>
                             </ButtonGroup>
                         </Card.Body>
@@ -194,25 +205,25 @@ function Rules(): JSX.Element {
                         <Card.Body>
                             <Row>
                                 <Col md={{ span: 1, offset: 0 }}><Button variant="success" size="sm" onClick={handleEdit}><EditIcon/></Button></Col>
-                                <Col md={{ span: 6, offset: 2 }}><Card.Title>{rule.title}</Card.Title></Col>
-                                <Col md={{ span: 1, offset: 1 }}><Button variant="success" size="sm" onClick={() => handleDelete(rule.slug)}><HighlightOffIcon/></Button></Col>
+                                <Col md={{ span: 6, offset: 2 }}><Card.Title>{r.title}</Card.Title></Col>
+                                <Col md={{ span: 1, offset: 1 }}><Button variant="success" size="sm" onClick={() => handleDelete(r,index)}><HighlightOffIcon/></Button></Col>
                             </Row>
-                            <Card.Text>{rule.body}</Card.Text>
+                            <Card.Text>{r.body}</Card.Text>
                         </Card.Body>
                     </Card>})}
             </CardColumns>
             <Button onClick={handleShow}>Add a Rule</Button>
             {/* Modal with the Add Rule Form */}
             <Modal show={show} onHide={handleClose} size="lg" aria-labelledby="container-modal-title-vcenter" centered>
-                <Modal.Header closeButton><h3>Add a Rule</h3></Modal.Header>
-                <Modal.Body>
+                <Modal.Header closeButton style={{color: 'black'}}><h3>Add a Rule</h3></Modal.Header>
+                <Modal.Body style={{color: 'black'}}>
                 <Form>
                         <Form.Group as={Row} >
                             <Form.Label column md={{ span: 1, offset: 0 }}>
                                 <h5>Title</h5>
                             </Form.Label>
                             <Col md={{ span: 11, offset: 0 }}>
-                                <Form.Control value={customRule.title} onChange={handleChange_title} placeholder="Name of the Rule"/>
+                                <Form.Control value={customRule.title} onChange={handle_new_rule_title} placeholder="Name of the Rule"/>
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} >
@@ -220,7 +231,7 @@ function Rules(): JSX.Element {
                                 <h5>Body</h5>
                             </Form.Label>
                             <Col md={{ span: 11, offset: 0 }}>
-                                <Form.Control as="textarea" value={customRule.body} onChange={handleChange_body} placeholder="Rule Description"/>
+                                <Form.Control as="textarea" rows={5} value={customRule.body} onChange={handle_new_rule_body} placeholder="Rule Description"/>
                             </Col>
                         </Form.Group>
                     </Form>

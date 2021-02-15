@@ -24,7 +24,7 @@ class HistoryList(generics.ListAPIView):
     #redefined method to only include user's history
     def get_queryset(self):
         user = self.request.user.id
-        return History.objects.filter(author=user)
+        return History.objects.filter(author=user).order_by('start_date')
 
 class HistoryDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
